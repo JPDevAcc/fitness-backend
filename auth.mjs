@@ -3,8 +3,8 @@ import crypto from 'crypto';
 
 export const authenticate = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
-    if (!user) res.status(401).send({ message: 'Invalid email / username address' });
-    else if (user.password !== req.body.password) res.status(401).send({ message: 'Invalid password' });
+    if (!user) res.status(401).send({ message: 'Invalid email / password' });
+    else if (user.password !== req.body.password) res.status(401).send({ message: 'Invalid email / password' });
     else {
         const token = crypto.randomBytes(16).toString('base64');
         user.token = token;
