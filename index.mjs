@@ -26,7 +26,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// (See https://github.com/expressjs/session/issues/)
+// (See https://github.com/expressjs/session/issues/837)
 function fakeSecure(req, res, next) {
 	Object.defineProperty(req, 'secure', { get: () => true });
 	next() ;
