@@ -1,5 +1,5 @@
 import express from "express";
-import * as register from "./registrationController.mjs"
+import * as userProfileController from "./userProfileController.mjs" ;
 import { getUnsplashPic } from "./unsplashController.mjs";
 const router = express.Router();
 
@@ -19,6 +19,6 @@ router.post('/logout', (req, res, next) => {
 })
 
 router.get("/unsplash", getUnsplashPic)
-
+router.patch("/profile/:fieldName", userProfileController.updateProfile) ; // Create or update user-profile
 
 export default router;
