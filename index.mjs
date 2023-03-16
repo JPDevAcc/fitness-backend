@@ -9,8 +9,6 @@ import session from "express-session";
 import MemoryStoreClass from "memorystore";
 const MemoryStore = MemoryStoreClass(session);
 
-// https://www.npmjs.com/package/memorystore
-
 // Init dotenv
 config();
 
@@ -18,31 +16,54 @@ config();
 const app = express();
 
 // CORS
-app.use(cors());
+const corsOptions = {
+  origin: true,
+  credentials: true
+};
+app.use(cors(corsOptions));
 
 // Other middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// (See https://github.com/expressjs/session/issues/)
+function fakeSecure(req, res, next) {
+	Object.defineProperty(req, 'secure', { get: () => true });
+	next() ;
+}
+if (process.env.NODE_ENV === 'development' && process.env.FAKE_SECURE_EXPRESS_SESSION_WORKAROUND === 'true') {
+	console.log("*** WARNING: FAKING SECURE CONNECTION ***")
+	app.use(fakeSecure) ;
+}
+
+const secure = process.env.NODE_ENV !== 'development' || process.env.FAKE_SECURE_EXPRESS_SESSION_WORKAROUND === 'true' ;
+
+const sessionCookieOpts = {
+	maxAge: 24 * 60 * 60 * 1000,
+	secure,
+	httpOnly: true,
+	sameSite: 'none'
+} ;
+console.log("Session cookie settings:", sessionCookieOpts) ;
 
 app.use(session({
-	cookie: {
-		maxAge: 24 * 60 * 60 * 1000,
-		secure: false
-	},
+	cookie: sessionCookieOpts,
 	store: new MemoryStore({
-		checkPeriod: 1 * 60 * 60 * 1000 // prune expired entries every 24h
+		checkPeriod: 1 * 60 * 60 * 1000 // prune expired entries every hour
 	}),
 	secret: 'ah738dfusk626fuiakgheghbslgh56274',
 	resave: false,
 	saveUninitialized: true
 }))
 
+// Pre-auth routes
 app.post("/register", register.userRegister);
+
+// Auth
 app.post("/auth", authenticate)
 app.use(authorize)
 
-// Routes
+// Post-auth routes
 app.use(router);
 
 // Connect to DB

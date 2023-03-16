@@ -6,7 +6,7 @@ export const authenticate = async (req, res) => {
     if (!user) res.status(401).send({ message: 'Invalid email / password' });
     else if (user.password !== req.body.password) res.status(401).send({ message: 'Invalid email / password' });
     else {
-        // Old token stuff
+        // Token-based secret
         const token = crypto.randomBytes(16).toString('base64');
         user.token = token;
         await user.save();
@@ -14,23 +14,23 @@ export const authenticate = async (req, res) => {
         req.session.regenerate(function (err) {
             if (err) next(err)
 
-            // store user information in session, typically a user id
+            // Store user's database ID in the session data
             req.session.userId = user._id;
-            console.log("Database ID:", user._id);
+            console.log("Setting session database id =", user._id);
 
-            // save the session before redirection to ensure page
-            // load does not happen before session is saved
+            // Save the session, and return the session-cookie and the token
             req.session.save(function (err) {
                 if (err) return next(err)
                 res.send({ token });
-                // res.redirect('/')
             })
         })
     }
 }
 
 export const authorize = async (req, res, next) => {
-    console.log("printing id: ", req.session.userId)
+    console.log("Session-based auth (userId): ", req.session.userId) ;
+		console.log("Token-based auth: ", req.headers['token']) ;
+		
     const token = req.headers['token'];
 
     let ok = true;
