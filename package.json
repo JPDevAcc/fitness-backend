@@ -16,6 +16,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "memorystore": "^1.6.7",
-    "mongoose": "^7.0.0"
+    "mongoose": "^7.0.0",
+		"bcryptjs": "^2.4.3"
   }
 }

@@ -1,12 +1,14 @@
 // Auth controllers and middleware
-
 import User from './models/user.mjs';
 import crypto from 'crypto';
+import bcrypt from "bcryptjs";
 
 export const authenticate = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) res.status(401).send({ message: 'Invalid email / password' });
-    else if (user.password !== req.body.password) res.status(401).send({ message: 'Invalid email / password' });
+    else if (!bcrypt.compareSync(req.body.password, user.password)) {
+			 res.status(401).send({ message: 'Invalid email / password' });
+		}
     else {
         // Token-based secret
         const token = crypto.randomBytes(16).toString('base64');
