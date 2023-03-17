@@ -3,8 +3,8 @@ import express from "express";
 import router from "./router.mjs";
 import cors from "cors";
 import mongoose from "mongoose";
-import { authenticate, authorize } from "./auth.mjs";
-import * as register from "./registrationController.mjs"
+import * as auth from "./auth.mjs";
+import * as register from "./controllers/registrationController.mjs"
 import session from "express-session";
 import MemoryStoreClass from "memorystore";
 const MemoryStore = MemoryStoreClass(session);
@@ -56,14 +56,15 @@ app.use(session({
 	saveUninitialized: true
 }))
 
-// Pre-auth routes
+// Pre-authorization routes
 app.post("/register", register.userRegister);
+app.post("/auth", auth.authenticate) ;
+app.post("/logout", auth.logout) ; // (note: we allow access even if user isn't authorized as we don't want a logout request to ever fail)
 
-// Auth
-app.post("/auth", authenticate)
-app.use(authorize)
+// Authorization check
+app.use(auth.authorize) ;
 
-// Post-auth routes
+// Post-authorization routes
 app.use(router);
 
 // Connect to DB

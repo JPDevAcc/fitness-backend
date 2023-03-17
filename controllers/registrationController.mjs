@@ -1,4 +1,4 @@
-import User from "./models/user.mjs";
+import User from "../models/user.mjs";
 
 // Handle user registration
 export async function userRegister(req, res) {
