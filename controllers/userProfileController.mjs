@@ -1,8 +1,20 @@
 import UserProfile from "../models/userProfile.mjs";
 
+export async function retrieve(req, res) {
+	try {
+		const _id = req.session.userId ;
+		const userProfile = await UserProfile.findOne({ _id }) ;
+		return res.send(userProfile) ; // (not an error if it doesn't exist, we just return the null)
+	}
+	catch(err) {
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
+
 // Handle user-profile updates
 export async function updateProfile(req, res) {
-	const updatableFields = ['bio', 'age', 'weight', 'height', 'dietpractice', 'diettype'] ;
+	const updatableFields = ['onboardingStageComplete', 'bio', 'age', 'weight', 'height', 'dietPractice', 'dietType'] ;
 	const fieldName = req.params.fieldName ;
 	if (!updatableFields.includes(fieldName)) return res.status(400).send({message: "Invalid request"}) ;
 
