@@ -4,10 +4,14 @@ import * as testController from "./controllers/testController.mjs" ;
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 const router = express.Router();
 
-// Routes
-router.get("/unsplash", getUnsplashPic)
+// Main routes
+router.get("/profile", userProfileController.retrieve) ; // Retrieve user-profile
 router.patch("/profile/:fieldName", userProfileController.updateProfile) ; // Create or update user-profile
 
+// API relays
+router.get("/unsplash", getUnsplashPic) ;
+
+// DEVELOPMENT-ONLY
 router.get("/all", testController.getAll) ; // GET ALL DOCUMENTS FROM DATABASE | TODO: REMOVE IN PRODUCTION!!!!!!!!
 
 export default router;

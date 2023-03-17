@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 
 const userProfileSchema = Schema({
 	userId: String, // TOCHECK: Should this be a String or an ObjectID?
+	onboardingStageComplete: Boolean,
   bio: String,
 	age: String,
 	weight: Number,
