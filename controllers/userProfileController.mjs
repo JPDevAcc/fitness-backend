@@ -1,4 +1,4 @@
-import UserProfile from "./models/userProfile.mjs";
+import UserProfile from "../models/userProfile.mjs";
 
 // Handle user-profile updates
 export async function updateProfile(req, res) {

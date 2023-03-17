@@ -1,3 +1,5 @@
+// Auth controllers and middleware
+
 import User from './models/user.mjs';
 import crypto from 'crypto';
 
@@ -42,7 +44,6 @@ export const authorize = async (req, res, next) => {
     }
 
     if (!token) ok = false;
-
     if (ok) {
         const user = await User.findOne({ token });
         if (!user) ok = false;
@@ -51,3 +52,17 @@ export const authorize = async (req, res, next) => {
     if (ok) next();
     else res.status(401).send();
 }
+
+// Logout controller
+export const logout = (req, res, next) => {
+	// Clear id in session-data and save
+	req.session.userId = null ;
+	req.session.save(function (err) {
+		if (err) return next(err) ;
+		// Replace session token
+		req.session.regenerate(function (err) {
+			if (err) next(err) ;
+			return res.send({ result: true }) ;        
+    })
+  })
+} ;

@@ -1,7 +1,7 @@
 // Debugging method to get all database records
 
-import User from "./models/user.mjs";
-import UserProfile from "./models/userProfile.mjs";
+import User from "../models/user.mjs";
+import UserProfile from "../models/userProfile.mjs";
 
 export async function getAll(req, res) {
 	try {
