@@ -14,7 +14,16 @@ export async function retrieve(req, res) {
 
 // Handle user-profile updates
 export async function updateProfile(req, res) {
-	const updatableFields = ['onboardingStageComplete', 'bio', 'age', 'weight', 'height', 'dietPractice', 'dietType'] ;
+	const updatableFields = [
+		'onboardingStageComplete',
+		'bio', 'bioPrivacy',
+		'age', 'agePrivacy',
+		'weight', 'weightPrivacy',
+		'height', 'heightPrivacy',
+		'dietPractice', 'dietPracticePrivacy',
+		'dietType', 'dietTypePrivacy',
+		'image', 'imagePrivacy'
+	] ;
 	const fieldName = req.params.fieldName ;
 	if (!updatableFields.includes(fieldName)) return res.status(400).send({message: "Invalid request"}) ;
 
