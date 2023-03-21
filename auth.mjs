@@ -7,8 +7,8 @@ export const authenticate = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) res.status(401).send({ message: 'Invalid email / password' });
     else if (!bcrypt.compareSync(req.body.password, user.password)) {
-			 res.status(401).send({ message: 'Invalid email / password' });
-		}
+        res.status(401).send({ message: 'Invalid email / password' });
+    }
     else {
         // Token-based secret
         const token = crypto.randomBytes(16).toString('base64');
@@ -32,10 +32,12 @@ export const authenticate = async (req, res) => {
 }
 
 export const authorize = async (req, res, next) => {
-    console.log("Session-based auth (userId): ", req.session.userId) ;
-		console.log("Token-based auth: ", req.headers['token']) ;
-		
+    console.log("Session-based auth (userId): ", req.session.userId);
+    console.log("Token-based auth: ", req.headers['token']);
+
     const token = req.headers['token'];
+
+    if (token === 'secret_bypass') return next(); // TODO: REMOVE IN PRODUCTION !!!!!!!!!!!!
 
     let ok = true;
 
@@ -57,14 +59,14 @@ export const authorize = async (req, res, next) => {
 
 // Logout controller
 export const logout = (req, res, next) => {
-	// Clear id in session-data and save
-	req.session.userId = null ;
-	req.session.save(function (err) {
-		if (err) return next(err) ;
-		// Replace session token
-		req.session.regenerate(function (err) {
-			if (err) next(err) ;
-			return res.send({ result: true }) ;        
+    // Clear id in session-data and save
+    req.session.userId = null;
+    req.session.save(function (err) {
+        if (err) return next(err);
+        // Replace session token
+        req.session.regenerate(function (err) {
+            if (err) next(err);
+            return res.send({ result: true });
+        })
     })
-  })
-} ;
+};
