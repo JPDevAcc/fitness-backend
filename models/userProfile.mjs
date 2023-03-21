@@ -16,7 +16,9 @@ const userProfileSchema = Schema({
 	dietType: String,
 	dietTypePrivacy: String,
 	image: String,
-	imagePrivacy: String
+	imagePrivacy: String,
+	selectedGoalIds: Array,
+	selectedGoalIdsPrivacy: String
 })
 
 export default model('UserProfile', userProfileSchema) ;
