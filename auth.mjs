@@ -54,7 +54,7 @@ export const authorize = async (req, res, next) => {
     }
 
     if (ok) next();
-    else res.status(401).send();
+    else res.status(401).send( {code: 'NOT_AUTHORIZED'} );
 }
 
 // Logout controller
