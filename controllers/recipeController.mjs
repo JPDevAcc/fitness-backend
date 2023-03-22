@@ -13,14 +13,15 @@ function responseStatusCheck(res) {
 
 export async function getRecipe(req, res) {
 
+
     const key = process.env.FOOD_API_KEY;
-    // const recipe = await Recipe.findOne({ _id: req.params.id });
-    // const recipe = await Recipe.findOne({ _id: req.params.id }).populate('pictures');
-    // const key = process.env.UNSPLASH_KEY;
+
     const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
     try {
+
+        console.log(req.body)
         const params = new URLSearchParams({
-            query: 'pasta'
+            query: req.params.query
         })
 
         const request = await axios.get(`${url}?${params.toString()}`,
@@ -43,12 +44,14 @@ export async function getRecipe(req, res) {
 }
 
 export async function addRecipe(req, res) {
-    const recipe = new Recipe(req.body);
+    console.log(req.body.id)
+
     try {
-        if (req.body.id === Recipe.findOne({ id: req.body.id })) {
+        if (await Recipe.findOne({ id: req.body.id })) {
             return res.send({ message: "Recipe already exists!" });
         }
         else {
+            const recipe = new Recipe(req.body);
             await recipe.save()
             return res.send({ message: "Recipe added successfully!" });
         }
@@ -72,5 +75,15 @@ export async function addPicture(req, res) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
 
+}
+
+export async function getSavedRecipes(req, res) {
+    try {
+        const recipes = await Recipe.find();
+        return res.send(recipes);
+    }
+    catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
 }
 
