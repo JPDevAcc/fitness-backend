@@ -45,7 +45,6 @@ export async function getRecipe(req, res) {
 
 export async function addRecipe(req, res) {
     console.log(req.body.id)
-
     try {
         if (await Recipe.findOne({ id: req.body.id })) {
             return res.send({ message: "Recipe already exists!" });
@@ -62,6 +61,34 @@ export async function addRecipe(req, res) {
     }
 
 }
+
+export async function getFullRecipe(req, res) {
+    const key = process.env.FOOD_API_KEY;
+
+    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + req.params.id + "/information"
+    try {
+
+        const request = await axios.get(`${url}`,
+
+            {
+                headers: {
+
+                    'X-RapidAPI-Key': key,
+                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+                }
+            }
+        )
+        const response = await responseStatusCheck(request);
+        const data = response.data;
+
+        return res.send(data);
+    }
+
+    catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
 
 
 export async function addPicture(req, res) {
