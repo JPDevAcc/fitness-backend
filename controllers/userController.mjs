@@ -4,6 +4,8 @@ import { ensurePresent } from "../utils.mjs";
 
 // Handle user registration
 export async function userRegister(req, res) {
+	const userData = req.body ;
+	userData.username = userData.email ; // (just use e-mail address for username for now)
 	const user = new User(req.body)
 	try {
 		user.password = bcrypt.hashSync(user.password, 8);
