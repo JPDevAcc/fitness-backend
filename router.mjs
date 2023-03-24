@@ -5,6 +5,7 @@ import * as userProfileController from "./controllers/userProfileController.mjs"
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes } from "./controllers/recipeController.mjs";
+import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
 const router = express.Router();
 
 // Main routes
@@ -18,6 +19,8 @@ router.patch("/profile/:fieldName", userProfileController.updateProfile); // Cre
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
 router.post("/addPicture", addPicture); // Add picture to database
+router.get("/bodyparts", getBodyparts);
+router.get("/exercises/bodypart/:bodypart", getExercise);
 
 router.get("/recipe/:query", getRecipe); // Get recipe from API
 router.post("/addRecipe", addRecipe); // Add recipe to database
