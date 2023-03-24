@@ -89,6 +89,62 @@ export async function getFullRecipe(req, res) {
     }
 }
 
+export async function getIngredientInfo(req, res) {
+    const key = process.env.FOOD_API_KEY;
+
+    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/" + req.params.id + "/information"
+    try {
+
+        const request = await axios.get(`${url}`,
+
+            {
+                params: { amount: req.params.amount, unit: req.params.unit },
+                headers: {
+
+                    'X-RapidAPI-Key': key,
+                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+                }
+            }
+        )
+        const response = await responseStatusCheck(request);
+        const data = response.data;
+
+        return res.send(data);
+    }
+
+    catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function getIngredientID(req, res) {
+    const key = process.env.FOOD_API_KEY;
+
+    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search"
+    try {
+
+        const request = await axios.get(`${url}`,
+
+            {
+                params: { query: req.params.query },
+                headers: {
+
+                    'X-RapidAPI-Key': key,
+                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
+                }
+            }
+        )
+        const response = await responseStatusCheck(request);
+        const data = response.data;
+
+        return res.send(data);
+    }
+
+    catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
 
 
 export async function addPicture(req, res) {

@@ -4,7 +4,7 @@ import * as userPrefsController from "./controllers/userPrefsController.mjs";
 import * as userProfileController from "./controllers/userProfileController.mjs";
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
-import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe } from "./controllers/recipeController.mjs";
+import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID } from "./controllers/recipeController.mjs";
 const router = express.Router();
 
 // Main routes
@@ -21,6 +21,8 @@ router.post("/addPicture", addPicture); // Add picture to database
 
 router.get("/recipe/:query", getRecipe); // Get recipe from API
 router.get("/fullrecipe/:id", getFullRecipe); // Get FULL recipe from API
+router.get("/ingredient/:query", getIngredientID); // Get ingredient ID from API
+router.get("/ingredient/:id/:amount/:unit", getIngredientInfo); // Get ingredient info from API
 
 router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)
