@@ -6,6 +6,8 @@ import * as notificationsController from "./controllers/notificationsController.
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe } from "./controllers/recipeController.mjs";
+import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
+
 const router = express.Router();
 
 // Main routes
@@ -20,6 +22,8 @@ router.get("/notifications", notificationsController.retrieve); // Get notificat
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
 router.post("/addPicture", addPicture); // Add picture to database
+router.get("/bodyparts", getBodyparts);
+router.get("/exercises/bodypart/:bodypart", getExercise);
 
 router.get("/recipe/:query", getRecipe); // Get recipe from API
 router.get("/fullrecipe/:id", getFullRecipe); // Get FULL recipe from API
