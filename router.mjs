@@ -2,6 +2,7 @@ import express from "express";
 import * as userController from "./controllers/userController.mjs"
 import * as userPrefsController from "./controllers/userPrefsController.mjs";
 import * as userProfileController from "./controllers/userProfileController.mjs";
+import * as notificationsController from "./controllers/notificationsController.mjs" ;
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe } from "./controllers/recipeController.mjs";
@@ -14,6 +15,7 @@ router.get("/prefs", userPrefsController.retrieve); // Retrieve user-prefs
 router.patch("/prefs/:fieldName", userPrefsController.updatePrefs); // Create or update user-prefs
 router.get("/profile", userProfileController.retrieve); // Retrieve user-profile
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Create or update user-profile
+router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
