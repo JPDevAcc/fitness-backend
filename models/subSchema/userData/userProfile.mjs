@@ -1,7 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema } from 'mongoose';
 
 const userProfileSchema = Schema({
-	userId: String, // TOCHECK: Should this be a String or an ObjectID?
+	userId: String,
+	userName: { type: String, unique: true }, // Note: Might want to make this case-insensitive too by re-creating the collection with appropriate collation options
 	onboardingStageComplete: Boolean,
   bio: String,
 	bioPrivacy: String,
@@ -21,4 +22,4 @@ const userProfileSchema = Schema({
 	selectedGoalIdsPrivacy: String
 })
 
-export default model('UserProfile', userProfileSchema) ;
+export default userProfileSchema ;

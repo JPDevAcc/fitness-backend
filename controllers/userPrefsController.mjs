@@ -1,16 +1,4 @@
-import UserPrefs from "../models/userPrefs.mjs";
-
-export async function retrieve(req, res) {
-	try {
-		const _id = req.session.userId ;
-		const userPrefs = await UserPrefs.findOne({ _id }) ;
-		return res.send(userPrefs) ; // (not an error if it doesn't exist, we just return the null)
-	}
-	catch(err) {
-		console.error(err) ;
-		return res.status(500).send({message: "Something went wrong!"})
-	}
-}
+import UserData from "../models/userData.mjs";
 
 // Handle user-profile updates
 export async function updatePrefs(req, res) {
@@ -20,10 +8,10 @@ export async function updatePrefs(req, res) {
 
 	const _id = req.session.userId ;
 	const filter = { _id } ;
-	const update = { $set: { [fieldName]: req.body.value } } ;
+	const update = { $set: { [`userPrefs.${fieldName}`]: req.body.value } } ;
 		
 	try {
-  	await UserPrefs.updateOne(filter, update, { upsert: true });
+  	await UserData.updateOne(filter, update); // (user profile should already exist at this point)
   	return res.send({ result: true }) ;
 	}
 	catch(err) {

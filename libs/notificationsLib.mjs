@@ -1,22 +1,17 @@
-import Notification from "../models/notification.mjs";
+import UserData from "../models/userData.mjs";
 import { trimWithEllipsis } from "../utils/utils.mjs";
 
 export default class NotificationsLib {
-	static async createNotification(userId, sourceType, sourceCollectionId) {
-		const notification = new Notification({userId, sourceType, sourceCollectionId, isNewNotification: true}) ;
-		await notification.save()
-	}
-
 	static async getNotificationsForUser(userId) {
 		let notifications = [] ;
-		notifications = [...notifications, ...this._getMessageNotifications(userId)] ;
+		notifications = [...notifications, ...await this._getMessageNotifications(userId)] ;
 		notifications = [...notifications, ...await this._getContactRequestNotifications(userId)] ;
 		
 		return notifications ;
 	}
 
 	// CURRENTLY MOCKED!
-	static _getMessageNotifications(userId) {
+	static async _getMessageNotifications(destUserId) {
 		const senderUsername = 'Someone' ;
 		const subject = 'Hi!' ;
 		const messageId = 123 ;
@@ -32,29 +27,26 @@ export default class NotificationsLib {
 					msgSummary: trimWithEllipsis(message, 30)
 				},
 				dateTime
-				}
+			}
 		] ;
 	}
 
-	static async _getContactRequestNotifications(userId) {
-		const senderUsername = 'NotImplemented' ;
-		const requestId = 456 ;
-		const dateTime = new Date() ;
-		const mockNotification = {
-			type: 'contact_request',
-			dataForType: {
-				senderUsername,
-				requestId,
-			},
-			dateTime
-		} ;
-
+	static async _getContactRequestNotifications(destUserId) {
 		// Get contact-request notifications
-		// TODO: Join with User collection to determine username 
 		const notifications = [] ;
-		console.log("CHECKING FOR NOTIFICATIONS FOR USER WITH ID: ", userId) ;
-		for await (const notification of Notification.find({ sourceType: 'notification', userId })) {
-			notifications.push(mockNotification) ;
+		console.log("CHECKING FOR CONTACT-REQUEST NOTIFICATIONS FOR USER WITH ID: ", destUserId) ;
+		for await (const userData of UserData.find({ _id: destUserId })) {
+			for (const contactReq of userData.contactRequests) {
+				const notification = {
+					type: 'contact_request',
+					dataForType: {
+						sourceUserName: contactReq.sourceUserName,
+						requestId: contactReq._id,
+					},
+					dateTime: contactReq.dateTime
+				}
+				notifications.push(notification) ;
+			}
 		}
 		return notifications ;
 	}

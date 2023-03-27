@@ -1,5 +1,7 @@
+import { config } from "dotenv";
 import express from "express";
 import * as userController from "./controllers/userController.mjs"
+import * as userDataController from "./controllers/userDataController.mjs";
 import * as userPrefsController from "./controllers/userPrefsController.mjs";
 import * as userProfileController from "./controllers/userProfileController.mjs";
 import * as socialController from "./controllers/socialController.mjs" ;
@@ -9,17 +11,19 @@ import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID } from "./controllers/recipeController.mjs";
 import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
 
+// Init dotenv
+config();
+
 const router = express.Router();
 
 // Main routes
 router.post("/changepass", userController.userChangePwd); // Change user-password
 router.post("/delaccount", userController.userDeleteAccount); // Delete user-account
-router.get("/prefs", userPrefsController.retrieve); // Retrieve user-prefs
+router.get("/userdata", userDataController.retrieve); // Retrieve user-date (prefs, profile, etc)
 router.patch("/prefs/:fieldName", userPrefsController.updatePrefs); // Create or update user-prefs
-router.get("/profile", userProfileController.retrieve); // Retrieve user-profile
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Create or update user-profile
 router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
-router.put("/contactrequests/:destUserId", socialController.createContactRequest);
+router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
@@ -36,6 +40,8 @@ router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)
 
 // DEVELOPMENT-ONLY
-router.get("/all", testController.getAll); // GET ALL DOCUMENTS FROM DATABASE | TODO: REMOVE IN PRODUCTION!!!!!!!!
+if (process.env.NODE_ENV === 'development') {
+	router.get("/all", testController.getAll); // GET ALL DOCUMENTS FROM DATABASE | TODO: REMOVE IN PRODUCTION!!!!!!!!
+}
 
 export default router;
