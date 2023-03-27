@@ -5,6 +5,7 @@ import * as userDataController from "./controllers/userDataController.mjs";
 import * as userPrefsController from "./controllers/userPrefsController.mjs";
 import * as userProfileController from "./controllers/userProfileController.mjs";
 import * as notificationsController from "./controllers/notificationsController.mjs";
+import * as socialController from "./controllers/socialController.mjs";
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID } from "./controllers/recipeController.mjs";
