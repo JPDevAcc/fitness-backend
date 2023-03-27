@@ -1,15 +1,24 @@
 // Auth controllers and middleware
+
+import { config } from "dotenv";
 import User from './models/user.mjs';
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
+import ProfileLib from "./libs/profileLib.mjs";
+
+// Init dotenv
+config();
 
 export const authenticate = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) res.status(401).send({ message: 'Invalid email / password' });
     else if (!bcrypt.compareSync(req.body.password, user.password)) {
-        res.status(401).send({ message: 'Invalid email / password' });
+      res.status(401).send({ message: 'Invalid email / password' });
     }
     else {
+				// Create database entries for first-login
+				await ProfileLib.setInitialRandomUserName(user._id) ;
+
         // Token-based secret
         const token = crypto.randomBytes(16).toString('base64');
         user.token = token;
@@ -37,7 +46,10 @@ export const authorize = async (req, res, next) => {
 
     const token = req.headers['token'];
 
-    if (token === 'secret_bypass') return next(); // TODO: REMOVE IN PRODUCTION !!!!!!!!!!!!
+		// TODO: AUTH BYPASS | TODO: REMOVE IN PRODUCTION!!!!!!!!
+		if (process.env.NODE_ENV === 'development') {
+    	if (token === 'secret_bypass') return next();
+		}
 
     let ok = true;
 

@@ -1,11 +1,11 @@
 // Debugging method to get all database records
 
 import User from "../models/user.mjs";
-import UserProfile from "../models/userProfile.mjs";
+import UserData from "../models/userData.mjs";
 
 export async function getAll(req, res) {
 	try {
-		const list = {User, UserProfile} ;
+		const list = {User, UserData} ;
 		const data = {} ;
 		for (const [schemaName, schema] of Object.entries(list)) {
 			data[schemaName] = await schema.find() ;

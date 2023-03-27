@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { Schema } from 'mongoose';
 
 const userPrefsSchema = Schema({
-	userId: String, // TOCHECK: Should this be a String or an ObjectID?
+	userId: String,
 	onboardingStageComplete: Boolean,
 	weightUnits: String,
 	heightUnits: String,
@@ -9,4 +9,4 @@ const userPrefsSchema = Schema({
 	temperatureUnits: String
 })
 
-export default model('UserPrefs', userPrefsSchema) ;
+export default userPrefsSchema ;

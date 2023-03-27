@@ -1,0 +1,1 @@
+export const MONGO_ERR_DUPLICATE_KEY = 11000 ;

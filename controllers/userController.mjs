@@ -1,6 +1,6 @@
 import User from "../models/user.mjs";
 import bcrypt from "bcryptjs";
-import { ensurePresent } from "../utils.mjs";
+import { ensurePresent } from "../utils/utils.mjs";
 
 // Handle user registration
 export async function userRegister(req, res) {
