@@ -1,4 +1,3 @@
-import { config } from "dotenv";
 import express from "express";
 import * as userController from "./controllers/userController.mjs"
 import * as userDataController from "./controllers/userDataController.mjs";
@@ -17,9 +16,11 @@ const router = express.Router();
 // Main routes
 router.post("/changepass", userController.userChangePwd); // Change user-password
 router.post("/delaccount", userController.userDeleteAccount); // Delete user-account
-router.get("/userdata", userDataController.retrieve); // Retrieve user-date (prefs, profile, etc)
-router.patch("/prefs/:fieldName", userPrefsController.updatePrefs); // Create or update user-prefs
-router.patch("/profile/:fieldName", userProfileController.updateProfile); // Create or update user-profile
+router.get("/userdata", userDataController.retrieve); // Retrieve user-data (prefs, profile, etc)
+router.patch("/prefs/:fieldName", userPrefsController.updatePrefs); // Update user-prefs
+router.post("/profile/image/:category", userProfileController.updateImage) ; // Update image for user
+router.delete("/profile/image/:category", userProfileController.removeImage) ; // Remove image for user
+router.patch("/profile/:fieldName", userProfileController.updateProfile); // Update user-profile
 router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
 router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
 

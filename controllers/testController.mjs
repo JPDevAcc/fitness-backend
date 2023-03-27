@@ -2,10 +2,11 @@
 
 import User from "../models/user.mjs";
 import UserData from "../models/userData.mjs";
+import FileData from "../models/fileData.mjs";
 
 export async function getAll(req, res) {
 	try {
-		const list = {User, UserData} ;
+		const list = {User, UserData, FileData} ;
 		const data = {} ;
 		for (const [schemaName, schema] of Object.entries(list)) {
 			data[schemaName] = await schema.find() ;
