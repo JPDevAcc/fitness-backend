@@ -16,7 +16,7 @@ const userProfileSchema = Schema({
 	dietPracticePrivacy: String,
 	dietType: String,
 	dietTypePrivacy: String,
-	image: String,
+	imageUrl: String,
 	imagePrivacy: String,
 	selectedGoalIds: Array,
 	selectedGoalIdsPrivacy: String
