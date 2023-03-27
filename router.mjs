@@ -4,15 +4,12 @@ import * as userController from "./controllers/userController.mjs"
 import * as userDataController from "./controllers/userDataController.mjs";
 import * as userPrefsController from "./controllers/userPrefsController.mjs";
 import * as userProfileController from "./controllers/userProfileController.mjs";
-import * as socialController from "./controllers/socialController.mjs" ;
-import * as notificationsController from "./controllers/notificationsController.mjs" ;
+import * as notificationsController from "./controllers/notificationsController.mjs";
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID } from "./controllers/recipeController.mjs";
 import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
-
-// Init dotenv
-config();
+import { addCommunityPost, getCommunityPosts } from "./controllers/communityPostsController.mjs";
 
 const router = express.Router();
 
@@ -36,12 +33,15 @@ router.get("/fullrecipe/:id", getFullRecipe); // Get FULL recipe from API
 router.get("/ingredient/:query", getIngredientID); // Get ingredient ID from API
 router.get("/ingredient/:id/:amount/:unit", getIngredientInfo); // Get ingredient info from API
 
+router.post("/post", addCommunityPost) // Add post to database
+router.get("/posts", getCommunityPosts)
+
 router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)
 
 // DEVELOPMENT-ONLY
 if (process.env.NODE_ENV === 'development') {
-	router.get("/all", testController.getAll); // GET ALL DOCUMENTS FROM DATABASE | TODO: REMOVE IN PRODUCTION!!!!!!!!
+    router.get("/all", testController.getAll); // GET ALL DOCUMENTS FROM DATABASE | TODO: REMOVE IN PRODUCTION!!!!!!!!
 }
 
 export default router;
