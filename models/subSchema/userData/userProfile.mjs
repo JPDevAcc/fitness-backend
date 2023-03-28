@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
 
 const userProfileSchema = Schema({
-	userId: String,
 	userName: { type: String, unique: true }, // Note: Might want to make this case-insensitive too by re-creating the collection with appropriate collation options
 	onboardingStageComplete: Boolean,
   bio: String,
