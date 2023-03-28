@@ -29,6 +29,7 @@ router.get("/notifications", notificationsController.retrieve); // Get notificat
 router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
 router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest) ; // Accept a contact request
 router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest) ; // Reject a contact request
+router.delete("/contacts/:contactUserName", socialController.removeContact) ; // Remove a contact
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API

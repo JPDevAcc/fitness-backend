@@ -39,3 +39,15 @@ export async function rejectContactRequest(req, res) {
 		return res.status(500).send({message: "Something went wrong!"})
 	}
 }
+
+// Remove contact
+export async function removeContact(req, res) {
+	try {
+  	await SocialLib.removeContact(req.params.contactUserName, req.session.userId) ;
+		return res.send({ result: true }) ;
+	}
+	catch(err) {
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
