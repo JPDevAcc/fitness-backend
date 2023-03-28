@@ -7,8 +7,22 @@ export async function createContactRequest(req, res) {
 		return res.send({ result: true }) ;
 	}
 	catch(err) {
-		if (err === "NOT_FOUND") return res.status(404).send({message: "User not found"}) ;
+		if (err === "USER_NOT_FOUND") return res.status(404).send({message: "User not found"}) ;
 		else if (err === "ALREADY_EXISTS") return res.status(409).send({message: "You have already sent this user a contact request"}) ;
+		else if (err === "ALREADY_CONTACT") return res.status(409).send({message: "This user is already a contact"}) ;
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
+
+// Accept contact-request
+export async function acceptContactRequest(req, res) {
+	try {
+  	await SocialLib.acceptContactRequest(req.params.sourceUserName, req.session.userId) ;
+		return res.send({ result: true }) ;
+	}
+	catch(err) {
+		if (err === "USER_NOT_FOUND") return res.status(404).send({message: "User not found"}) ;
 		console.error(err) ;
 		return res.status(500).send({message: "Something went wrong!"})
 	}
