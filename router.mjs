@@ -1,3 +1,4 @@
+import { config } from "dotenv";
 import express from "express";
 import * as userController from "./controllers/userController.mjs"
 import * as userDataController from "./controllers/userDataController.mjs";
@@ -11,6 +12,9 @@ import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIn
 import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
 import { addCommunityPost, getCommunityPosts } from "./controllers/communityPostsController.mjs";
 
+// Init dotenv
+config();
+
 const router = express.Router();
 
 // Main routes
@@ -23,6 +27,7 @@ router.delete("/profile/image/:category", userProfileController.removeImage) ; /
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Update user-profile
 router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
 router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
+router.delete("/contactrequests/:sourceUserName", socialController.rejectContactRequest) ; // Reject a contact request
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
