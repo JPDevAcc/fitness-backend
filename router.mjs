@@ -10,7 +10,7 @@ import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID } from "./controllers/recipeController.mjs";
 import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
-import { addCommunityPost, getCommunityPosts } from "./controllers/communityPostsController.mjs";
+import { addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost, getComment } from "./controllers/communityPostsController.mjs";
 
 // Init dotenv
 config();
@@ -43,7 +43,11 @@ router.get("/ingredient/:query", getIngredientID); // Get ingredient ID from API
 router.get("/ingredient/:id/:amount/:unit", getIngredientInfo); // Get ingredient info from API
 
 router.post("/post", addCommunityPost) // Add post to database
-router.get("/posts", getCommunityPosts)
+router.get("/posts", getCommunityPosts) // Get all posts from database
+router.get("/post/:id", getPostById) // Get post by ID
+router.post("/comment/:postId", addComment) // Add comment to database
+router.get("/comments/:postId", getCommentsForPost) // Get all comments for a post
+router.get("/comment/:id", getComment) // Get comment by ID
 
 router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)
