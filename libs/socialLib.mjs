@@ -2,7 +2,7 @@ import UserData from "../models/userData.mjs"
 
 export default class SocialLib {
 	static async addContactRequest(sourceUserId, destUserName) {
-		// Source ID -> UserName
+		// Source ID -> UserName, Image URL
 		const userDataSrc = await UserData.findOne({ _id: sourceUserId }) ;
 		if (!userDataSrc) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
 		const sourceUserName = userDataSrc.userProfile.userName ;
@@ -67,5 +67,26 @@ export default class SocialLib {
 			const update = { $push: { contacts: contactData }} ;
 			await UserData.updateOne(filter, update);
 		}
+	}
+
+	static async removeContact(contactUserName, currentUserId) {
+		// Get username for current user
+		const userDataCurrent = await UserData.findOne({ _id: currentUserId }) ;
+		if (!userDataCurrent) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
+		const currentUserName = userDataCurrent.userProfile.userName ;
+
+		// Remove for contact
+		{
+			const filter = { "userProfile.userName": contactUserName } ;
+			const update = { $pull: { "contacts": { userName: currentUserName }}} ;
+			await UserData.updateOne(filter, update) ; // Fail silently if it doesn't exist
+		}
+
+		// Remove for self
+		{
+			const filter = { _id: currentUserId } ;
+			const update = { $pull: { "contacts": { userName: contactUserName }}} ;
+			await UserData.updateOne(filter, update) ; // Fail silently if it doesn't exist
+		}		
 	}
 }
