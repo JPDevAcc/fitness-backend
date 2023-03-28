@@ -8,6 +8,19 @@ export async function createContactRequest(req, res) {
 	}
 	catch(err) {
 		if (err === "NOT_FOUND") return res.status(404).send({message: "User not found"}) ;
+		else if (err === "ALREADY_EXISTS") return res.status(409).send({message: "You have already sent this user a contact request"}) ;
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
+
+// Reject contact-request
+export async function rejectContactRequest(req, res) {
+	try {
+  	await SocialLib.removeContactRequest(req.params.sourceUserName, req.session.userId) ;
+		return res.send({ result: true }) ;
+	}
+	catch(err) {
 		console.error(err) ;
 		return res.status(500).send({message: "Something went wrong!"})
 	}

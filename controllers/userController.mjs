@@ -66,7 +66,7 @@ export async function userDeleteAccount(req, res) {
 			return res.status(401).send({ message: 'Incorrect password' });
 		}
 
-		// Delete account
+		// Delete account || TODO: Delete all other associated data!
 		await User.deleteOne({ _id }) ;
 		
 		// Okay

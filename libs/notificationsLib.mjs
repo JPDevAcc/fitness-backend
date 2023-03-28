@@ -40,6 +40,7 @@ export default class NotificationsLib {
 				const notification = {
 					type: 'contact_request',
 					dataForType: {
+						sourceImageUrl: contactReq.sourceImageUrl,
 						sourceUserName: contactReq.sourceUserName,
 						requestId: contactReq._id,
 					},

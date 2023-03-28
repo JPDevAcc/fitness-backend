@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import FileData from "../models/fileData.mjs"
+import { MONGO_ERR_DUPLICATE_KEY } from "../utils/errcodes.mjs";
 
 export default class FileDataLib {
 	// Create a file-data entry
