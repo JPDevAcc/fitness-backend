@@ -20,9 +20,9 @@ export default class NotificationsLib {
 		return [
 			{
 				type: 'message',
+				idForType: messageId,
 				dataForType: {
 					senderUsername,
-					messageId,
 					subject,
 					msgSummary: trimWithEllipsis(message, 30)
 				},
@@ -39,10 +39,9 @@ export default class NotificationsLib {
 			for (const contactReq of userData.contactRequests) {
 				const notification = {
 					type: 'contact_request',
+					idForType: contactReq.sourceUserName,
 					dataForType: {
-						sourceImageUrl: contactReq.sourceImageUrl,
-						sourceUserName: contactReq.sourceUserName,
-						requestId: contactReq._id,
+						sourceImageUrl: contactReq.sourceImageUrl
 					},
 					dateTime: contactReq.dateTime
 				}
