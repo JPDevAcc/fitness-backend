@@ -1,6 +1,7 @@
 import axios from "axios";
 import Recipe from "../models/recipe.mjs";
 import Picture from "../models/picture.mjs";
+import UserData from "../models/userData.mjs"
 
 function responseStatusCheck(res) {
 
@@ -44,14 +45,27 @@ export async function getRecipe(req, res) {
 }
 
 export async function addRecipe(req, res) {
-    console.log(req.body.id)
     try {
         if (await Recipe.findOne({ id: req.body.id })) {
-            return res.send({ message: "Recipe already exists!" });
+            const userData = await UserData.findOne({ _id: req.session.userId });
+            if (userData.recipes.includes(req.body.id)) {
+
+                return res.send({ message: "Recipe already in the list!" });
+            } else {
+                userData.recipes.push(req.body.id);
+                await userData.save();
+
+                return res.send({ message: "Recipe added to list successfully!" });
+            }
         }
         else {
             const recipe = new Recipe(req.body);
             await recipe.save()
+
+            const userData = await UserData.findOne({ _id: req.session.userId });
+            userData.recipes.push(req.body.id);
+            await userData.save();
+
             return res.send({ message: "Recipe added successfully!" });
         }
 
@@ -166,6 +180,16 @@ export async function getSavedRecipes(req, res) {
         return res.send(recipes);
     }
     catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function getUsersRecipes(req, res) {
+    try {
+        const userData = await UserData.findOne({ _id: req.session.userId });
+        const recipes = await Recipe.find({ id: { $in: userData.recipes } });
+        return res.send(recipes);
+    } catch (err) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
 }

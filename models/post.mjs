@@ -6,7 +6,8 @@ const post = Schema({
     imageUrl: String,
     date: Date,
     comments: Array,
-    likes: Number
+    likes: Array,
+    lols: Array,
 })
 
 export default model('Post', post);
