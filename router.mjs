@@ -30,6 +30,8 @@ router.put("/contactrequests/:destUserName", socialController.createContactReque
 router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest) ; // Accept a contact request
 router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest) ; // Reject a contact request
 router.delete("/contacts/:contactUserName", socialController.removeContact) ; // Remove a contact
+router.get("/contacts", socialController.retrieveContacts) ; // Retrieve contacts
+
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
