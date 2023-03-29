@@ -89,4 +89,10 @@ export default class SocialLib {
 			await UserData.updateOne(filter, update) ; // Fail silently if it doesn't exist
 		}		
 	}
+
+	static async retrieveContacts(userId) {
+		const userData = await UserData.findOne({ _id: userId }) ;
+		if (!userData) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
+		return userData.contacts ;
+	}
 }
