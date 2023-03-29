@@ -51,3 +51,15 @@ export async function removeContact(req, res) {
 		return res.status(500).send({message: "Something went wrong!"})
 	}
 }
+
+// Retrieve contacts
+export async function retrieveContacts(req, res) {
+	try {
+  	const contacts = await SocialLib.retrieveContacts(req.session.userId) ;
+		return res.send(contacts) ;
+	}
+	catch(err) {
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
