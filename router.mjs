@@ -8,9 +8,12 @@ import * as notificationsController from "./controllers/notificationsController.
 import * as socialController from "./controllers/socialController.mjs";
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
-import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID } from "./controllers/recipeController.mjs";
+import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID, getUsersRecipes } from "./controllers/recipeController.mjs";
 import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
-import { addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost, getComment } from "./controllers/communityPostsController.mjs";
+import {
+    addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost,
+    getComment, getLikesArray, getLolsArray, getCommentArray, findUser, likePost, lolPost
+} from "./controllers/communityPostsController.mjs";
 
 // Init dotenv
 config();
@@ -22,16 +25,15 @@ router.post("/changepass", userController.userChangePwd); // Change user-passwor
 router.post("/delaccount", userController.userDeleteAccount); // Delete user-account
 router.get("/userdata", userDataController.retrieve); // Retrieve user-data (prefs, profile, etc)
 router.patch("/prefs/:fieldName", userPrefsController.updatePrefs); // Update user-prefs
-router.post("/profile/image/:category", userProfileController.updateImage) ; // Update image for user
-router.delete("/profile/image/:category", userProfileController.removeImage) ; // Remove image for user
+router.post("/profile/image/:category", userProfileController.updateImage); // Update image for user
+router.delete("/profile/image/:category", userProfileController.removeImage); // Remove image for user
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Update user-profile
 router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
 router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
-router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest) ; // Accept a contact request
-router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest) ; // Reject a contact request
-router.delete("/contacts/:contactUserName", socialController.removeContact) ; // Remove a contact
-router.get("/contacts", socialController.retrieveContacts) ; // Retrieve contacts
-
+router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest); // Accept a contact request
+router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest); // Reject a contact request
+router.delete("/contacts/:contactUserName", socialController.removeContact); // Remove a contact
+router.get("/contacts", socialController.retrieveContacts); // Retrieve contacts
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
@@ -50,9 +52,17 @@ router.get("/post/:id", getPostById) // Get post by ID
 router.post("/comment/:postId", addComment) // Add comment to database
 router.get("/comments/:postId", getCommentsForPost) // Get all comments for a post
 router.get("/comment/:id", getComment) // Get comment by ID
+router.get("/likes/:postId", getLikesArray) // Get likes array for a post
+router.get("/lols/:postId", getLolsArray) // Get lols array for a post
+router.get("/commentarray/:postId", getCommentArray) // Get comment array for a post
+router.get("/like/:postId", likePost) // Like a post
+router.get("/lol/:postId", lolPost) // Lol a post
+
+router.get("/finduser/:username", findUser) // Find user by username
 
 router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)
+router.get("/userrecipes/", getUsersRecipes)
 
 // DEVELOPMENT-ONLY
 if (process.env.NODE_ENV === 'development') {

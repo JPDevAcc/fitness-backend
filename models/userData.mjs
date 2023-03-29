@@ -8,7 +8,8 @@ const userDataSchema = Schema({
 	userPrefs: UserPrefs,
 	userProfile: UserProfile,
 	contactRequests: [ContactRequest],
-	contacts: [Contact]
+	contacts: [Contact],
+	recipes: Array,
 })
 
-export default model('UserData', userDataSchema) ;
+export default model('UserData', userDataSchema);

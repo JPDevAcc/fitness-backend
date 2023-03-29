@@ -50,6 +50,47 @@ export async function addComment(req, res) {
     }
 }
 
+export async function likePost(req, res) {
+    try {
+        const userData = await UserData.findOne({ _id: req.session.userId });
+
+        const post = await Post.findOne({ _id: req.params.postId });
+        if (post.likes.includes(req.session.userId)) {
+            post.likes = post.likes.filter(id => id != req.session.userId);
+            await post.save();
+            return res.send({ message: "like removed" });
+        } else {
+            post.likes.push(req.session.userId);
+            await post.save();
+            return res.send({ message: "like added" });
+        }
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function lolPost(req, res) {
+    try {
+        const userData = await UserData.findOne({ _id: req.session.userId });
+
+        const post = await Post.findOne({ _id: req.params.postId });
+        if (post.lols.includes(req.session.userId)) {
+            post.lols = post.lols.filter(id => id != req.session.userId);
+            await post.save();
+            return res.send({ message: "lol removed" });
+        } else {
+            post.lols.push(req.session.userId);
+            await post.save();
+            return res.send({ message: "lol added" });
+        }
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
 export async function getCommentsForPost(req, res) {
     try {
         const post = await Post.findOne({ _id: req.params.postId });
@@ -76,6 +117,45 @@ export async function getPostById(req, res) {
         const post = await Post.findOne({ _id: req.params.id });
         return res.send(post);
     } catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function getLikesArray(req, res) {
+    try {
+        const post = await Post.findOne({ _id: req.params.postId });
+        return res.send(post.likes);
+    } catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function getLolsArray(req, res) {
+    try {
+        const post = await Post.findOne({ _id: req.params.postId });
+        return res.send(post.lols);
+    } catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function getCommentArray(req, res) {
+    try {
+        const post = await Post.findOne({ _id: req.params.postId });
+        return res.send(post.comments);
+    } catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function findUser(req, res) {
+
+    try {
+        const user = await UserData.findOne({ "userProfile.userName": req.params.username });
+        console.log(req.params.username)
+        return res.send(user);
+    } catch (err) {
+        console.log(err)
         return res.status(500).send({ message: "Something went wrong!" })
     }
 }
