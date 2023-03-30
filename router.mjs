@@ -30,10 +30,14 @@ router.delete("/profile/image/:category", userProfileController.removeImage); //
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Update user-profile
 router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
 router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
-router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest); // Accept a contact request
-router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest); // Reject a contact request
-router.delete("/contacts/:contactUserName", socialController.removeContact); // Remove a contact
-router.get("/contacts", socialController.retrieveContacts); // Retrieve contacts
+router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest) ; // Accept a contact request
+router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest) ; // Reject a contact request
+router.delete("/contacts/:contactUserName", socialController.removeContact) ; // Remove a contact
+router.get("/contacts", socialController.retrieveContacts) ; // Retrieve contacts
+router.post("/messages/:destUserName", socialController.sendMessage) ; // Send a message
+router.delete("/messages/:messageId", socialController.removeMessage) ; // Remove a message
+router.get("/messageMetas", socialController.retrieveMessageMetas) ; // Retrieve list of message metadata
+router.get("/messages/:messageId", socialController.retrieveMessageContent) ; // Retrieve message content
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API

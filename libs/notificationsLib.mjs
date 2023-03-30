@@ -1,52 +1,48 @@
 import UserData from "../models/userData.mjs";
-import { trimWithEllipsis } from "../utils/utils.mjs";
 
 export default class NotificationsLib {
 	static async getNotificationsForUser(userId) {
+		console.log("CHECKING FOR NOTIFICATIONS FOR USER WITH ID: ", userId) ;
+
+		const userData = await UserData.findOne({ _id: userId }) ;
 		let notifications = [] ;
-		notifications = [...notifications, ...await this._getMessageNotifications(userId)] ;
-		notifications = [...notifications, ...await this._getContactRequestNotifications(userId)] ;
+		notifications = [...notifications, ...await this._getMessageNotifications(userData)] ;
+		notifications = [...notifications, ...await this._getContactRequestNotifications(userData)] ;
 		
 		return notifications ;
 	}
 
-	// CURRENTLY MOCKED!
-	static async _getMessageNotifications(destUserId) {
-		const senderUsername = 'Someone' ;
-		const subject = 'Hi!' ;
-		const messageId = 123 ;
-		const message = 'This is just mocked for now - and some other text which is way too long but we only send the first 30 characters for the notification' ;
-		const dateTime = new Date() ;
-		return [
-			{
+	static async _getMessageNotifications(userData) {
+		const notifications = [] ;
+		for (const messageMeta of userData.messageMetas) {
+			const notification = {
 				type: 'message',
-				idForType: messageId,
+				idForType: messageMeta._id,
+				dateTime: messageMeta.dateTime,
 				dataForType: {
-					senderUsername,
-					subject,
-					msgSummary: trimWithEllipsis(message, 30)
-				},
-				dateTime
+					sourceImageUrl: messageMeta.sourceImageUrl,
+					sourceUserName: messageMeta.sourceUserName,
+					messageSubject: messageMeta.messageSubject,
+					messageSummary: messageMeta.messageSummary
+				}
 			}
-		] ;
+			notifications.push(notification) ;
+		}
+		return notifications ;
 	}
 
-	static async _getContactRequestNotifications(destUserId) {
-		// Get contact-request notifications
+	static async _getContactRequestNotifications(userData) {
 		const notifications = [] ;
-		console.log("CHECKING FOR CONTACT-REQUEST NOTIFICATIONS FOR USER WITH ID: ", destUserId) ;
-		for await (const userData of UserData.find({ _id: destUserId })) {
-			for (const contactReq of userData.contactRequests) {
-				const notification = {
-					type: 'contact_request',
-					idForType: contactReq.sourceUserName,
-					dataForType: {
-						sourceImageUrl: contactReq.sourceImageUrl
-					},
-					dateTime: contactReq.dateTime
+		for (const contactReq of userData.contactRequests) {
+			const notification = {
+				type: 'contact_request',
+				idForType: contactReq.sourceUserName,
+				dateTime: contactReq.dateTime,
+				dataForType: {
+					sourceImageUrl: contactReq.sourceImageUrl
 				}
-				notifications.push(notification) ;
 			}
+			notifications.push(notification) ;
 		}
 		return notifications ;
 	}

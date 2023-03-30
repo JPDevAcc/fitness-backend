@@ -3,14 +3,21 @@
 import User from "../models/user.mjs";
 import UserData from "../models/userData.mjs";
 import FileData from "../models/fileData.mjs";
+import Message from "../models/message.mjs";
 
 export async function getAll(req, res) {
 	try {
-		const list = {User, UserData, FileData} ;
+		const list = {User, UserData, Message, FileData} ;
 		const data = {} ;
 		for (const [schemaName, schema] of Object.entries(list)) {
 			data[schemaName] = await schema.find() ;
 		}
+
+		// Remove the file data
+		for (const key of Object.keys(data.FileData)) {
+			data.FileData[key].dataBase64 = undefined ;
+		}
+
     res.send(data) ;
 	}
 	catch(err) {
