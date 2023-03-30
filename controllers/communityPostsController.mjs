@@ -40,7 +40,7 @@ export async function addComment(req, res) {
         const userData = await UserData.findOne({ _id: req.session.userId });
 
         const comment = new Comment({
-            username: req.body.username || userData.userProfile.userName,
+            username: req.body.username || userData.userProfile.userName, // *** This looks dangerous!!! Please check. :) ***
             profileImg: userData.userProfile.imageUrl,
             text: req.body.text,
             date: new Date()
