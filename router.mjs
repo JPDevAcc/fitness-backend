@@ -55,8 +55,8 @@ router.get("/comment/:id", getComment) // Get comment by ID
 router.get("/likes/:postId", getLikesArray) // Get likes array for a post
 router.get("/lols/:postId", getLolsArray) // Get lols array for a post
 router.get("/commentarray/:postId", getCommentArray) // Get comment array for a post
-router.get("/like/:postId", likePost) // Like a post
-router.get("/lol/:postId", lolPost) // Lol a post
+router.post("/like/:postId", likePost) // Like a post
+router.post("/lol/:postId", lolPost) // Lol a post
 
 router.get("/finduser/:username", findUser) // Find user by username
 

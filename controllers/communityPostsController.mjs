@@ -5,7 +5,13 @@ import UserData from "../models/userData.mjs"
 export async function addCommunityPost(req, res) {
 
     try {
+        const userData = await UserData.findOne({ _id: req.session.userId });
+
+        console.log(userData)
+
         const communityPost = new Post({
+            username: userData.userProfile.userName,
+            profileImg: userData.userProfile.imageUrl,
             title: req.body.title,
             description: req.body.description,
             imageUrl: req.body.imageUrl,
@@ -35,6 +41,7 @@ export async function addComment(req, res) {
 
         const comment = new Comment({
             username: req.body.username || userData.userProfile.userName,
+            profileImg: userData.userProfile.imageUrl,
             text: req.body.text,
             date: new Date()
         });
