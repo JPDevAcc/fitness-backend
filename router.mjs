@@ -8,7 +8,10 @@ import * as notificationsController from "./controllers/notificationsController.
 import * as socialController from "./controllers/socialController.mjs";
 import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
-import { getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe, getIngredientInfo, getIngredientID, getUsersRecipes } from "./controllers/recipeController.mjs";
+import {
+    getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe,
+    getIngredientInfo, getIngredientID, getUsersRecipes, checkRecipe
+} from "./controllers/recipeController.mjs";
 import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
 import {
     addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost,
@@ -31,14 +34,14 @@ router.delete("/profile/image/:category", userProfileController.removeImage); //
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Update user-profile
 router.get("/notifications", notificationsController.retrieve); // Get notifications for current user
 router.put("/contactrequests/:destUserName", socialController.createContactRequest); // Create a contact-request
-router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest) ; // Accept a contact request
-router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest) ; // Reject a contact request
-router.delete("/contacts/:contactUserName", socialController.removeContact) ; // Remove a contact
-router.get("/contacts", socialController.retrieveContacts) ; // Retrieve contacts
-router.post("/messages/:destUserName", socialController.sendMessage) ; // Send a message
-router.delete("/messages/:messageId", socialController.removeMessage) ; // Remove a message
-router.get("/messageMetas", socialController.retrieveMessageMetas) ; // Retrieve list of message metadata
-router.get("/messages/:messageId", socialController.retrieveMessageContent) ; // Retrieve message content
+router.post("/contactrequests/self/:sourceUserName", socialController.acceptContactRequest); // Accept a contact request
+router.delete("/contactrequests/self/:sourceUserName", socialController.rejectContactRequest); // Reject a contact request
+router.delete("/contacts/:contactUserName", socialController.removeContact); // Remove a contact
+router.get("/contacts", socialController.retrieveContacts); // Retrieve contacts
+router.post("/messages/:destUserName", socialController.sendMessage); // Send a message
+router.delete("/messages/:messageId", socialController.removeMessage); // Remove a message
+router.get("/messageMetas", socialController.retrieveMessageMetas); // Retrieve list of message metadata
+router.get("/messages/:messageId", socialController.retrieveMessageContent); // Retrieve message content
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
@@ -50,6 +53,7 @@ router.get("/recipe/:query", getRecipe); // Get recipe from API
 router.get("/fullrecipe/:id", getFullRecipe); // Get FULL recipe from API
 router.get("/ingredient/:query", getIngredientID); // Get ingredient ID from API
 router.get("/ingredient/:id/:amount/:unit", getIngredientInfo); // Get ingredient info from API
+router.get("/checkrecipe/:id", checkRecipe); // Check if recipe is in database
 
 router.post("/post", addCommunityPost) // Add post to database
 router.get("/posts", getCommunityPosts) // Get all posts from database

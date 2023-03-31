@@ -49,8 +49,10 @@ export async function addRecipe(req, res) {
         if (await Recipe.findOne({ id: req.body.id })) {
             const userData = await UserData.findOne({ _id: req.session.userId });
             if (userData.recipes.includes(req.body.id)) {
+                userData.recipes = userData.recipes.filter(id => id != req.body.id);
+                await userData.save();
 
-                return res.send({ message: "Recipe already in the list!" });
+                return res.send({ message: "Recipe removed from list!" });
             } else {
                 userData.recipes.push(req.body.id);
                 await userData.save();
@@ -190,6 +192,24 @@ export async function getUsersRecipes(req, res) {
         const recipes = await Recipe.find({ id: { $in: userData.recipes } });
         return res.send(recipes);
     } catch (err) {
+        return res.status(500).send({ message: "Something went wrong!" })
+    }
+}
+
+export async function checkRecipe(req, res) {
+    try {
+        const userData = await UserData.findOne({ _id: req.session.userId });
+        const recipes = await userData.recipes;
+        if (!recipes) { return res.send(false) }
+        else if (recipes.includes(req.params.id)) {
+            return res.send(true);
+        }
+        else {
+            return res.send(false);
+        }
+    }
+    catch (err) {
+        console.log(err)
         return res.status(500).send({ message: "Something went wrong!" })
     }
 }
