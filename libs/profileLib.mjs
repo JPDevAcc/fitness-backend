@@ -1,6 +1,11 @@
 import { nonCryptoRandHexString } from "../utils/utils.mjs";
 import { MONGO_ERR_DUPLICATE_KEY } from "../utils/errcodes.mjs";
-import UserData from "../models/userData.mjs"
+import User from "../models/user.mjs";
+import UserData from "../models/userData.mjs";
+import Post from "../models/post.mjs";
+import Comment from "../models/comment.mjs";
+
+import bcrypt from "bcryptjs";
 
 export default class ProfileLib {
 	// Set a random username (on first login)
@@ -30,5 +35,69 @@ export default class ProfileLib {
 		const filter = { _id: userId } ;
 		const update = { $set: { [`userProfile.${fieldName}`]: value } } ;
 		await UserData.updateOne(filter, update); // (user profile should already exist at this point)
+	}
+
+	static async updateUserName(userId, currentPwd, newUserName) {
+		// Get user
+		const user = await User.findOne({ _id: userId }) ;
+		if (!user) throw "SELF_NOT_FOUND"; // (shouldn't happen except for possible race condition)
+
+		// Check username is valid (we don't allow ones that look like the random ones adn we enforce a min length)
+		if (newUserName.substring(0, 4).toLowerCase() === 'user') throw "INVALID_USERNAME" ;
+		if (newUserName.length < 8) throw "INVALID_USERNAME_LEN" ;
+
+		// Check current password matches
+		if (!bcrypt.compareSync(currentPwd, user.password)) throw "INVALID_PASSWORD" ;
+
+		// Check user is changing away from the automatically allocated random username
+		// (this restriction is subject to change)
+		const userData = await UserData.findOne({ _id: userId }) ;
+		const oldUserName = userData.userProfile.userName ;
+		if (oldUserName.substring(0, 4).toLowerCase() !== 'user') {
+			throw "ALREADY_CHANGED" ;
+		}
+
+		// TODO: Wrap in transaction?
+
+		// Update username in user-data
+		userData.userProfile.userName = newUserName ;
+		await userData.save()
+
+		// - Update other occurrences -
+		const updateDefs = [
+			{
+				model: UserData,
+				filter: {"contactRequests.sourceUserName": oldUserName},
+				update: {$set: {"contactRequests.$[].sourceUserName": newUserName}},
+				arrayFilter: {"contactRequests.sourceUserName": oldUserName}
+			},
+			{
+				model: UserData,
+				filter: {"contacts.userName": oldUserName},
+				update: {$set: {"contacts.$[].userName": newUserName}},
+				arrayFilter: {"contacts.userName": oldUserName}
+			},
+			{
+				model: UserData,
+				filter: {"messageMetas.sourceUserName": oldUserName},
+				update: {$set: {"messageMetas.$[].sourceUserName": newUserName}},
+				arrayFilter: {"messageMetas.sourceUserName": oldUserName}
+			},
+			{
+				model: Post,
+				filter: {"username": oldUserName},
+				update: {$set: {"username": newUserName}}
+			},
+			{
+				model: Comment,
+				filter: {"username": oldUserName},
+				update: {$set: {"username": newUserName}}
+			}
+		] ;
+
+		for (const {model, filter, update, arrayFilter} of updateDefs) {
+			if (arrayFilter) await model.updateMany(filter, update, {arrayFilter}) ;
+			else await model.updateMany(filter, update, {arrayFilter}) ;
+		}
 	}
 }
