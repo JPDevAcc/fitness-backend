@@ -46,7 +46,7 @@ export async function updateImage(req, res) {
 
 	try {
 		const fileName = await FileDataLib.createFileDataEntry(req.session.userId, category, req.body.dataBlob) ;
-  	await ProfileLib.updateField(req.session.userId, 'imageUrl', fileName) ;
+  	await ProfileLib.updateProfileImageUrl(req.session.userId, fileName) ;
   	return res.send({ url: fileName }) ;
 	}
 	catch(err) {
@@ -66,7 +66,7 @@ export async function removeImage(req, res) {
 
 	try {
 		await FileDataLib.removeFileDataEntry(req.session.userId, category) ;
-  	await ProfileLib.updateField(req.session.userId, 'imageUrl', "") ;
+  	await ProfileLib.updateProfileImageUrl(req.session.userId, "") ;
   	return res.send({ result: true }) ;
 	}
 	catch(err) {
