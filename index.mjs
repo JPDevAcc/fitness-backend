@@ -24,8 +24,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Other middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "1500kb" }));
+app.use(express.urlencoded({ extended: true, limit: "1500kb" }));
 
 // (See https://github.com/expressjs/session/issues/837)
 function fakeSecure(req, res, next) {
