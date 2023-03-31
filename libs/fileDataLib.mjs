@@ -1,4 +1,4 @@
-import { createHash } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import FileData from "../models/fileData.mjs"
 import { MONGO_ERR_DUPLICATE_KEY } from "../utils/errcodes.mjs";
 
@@ -16,7 +16,9 @@ export default class FileDataLib {
 		const fileType = dataType.split('/')[1] ;
 
 		// Store entry
-		const fileName = sha256 + "." + fileType ;
+		// (filename should be unique so that we can easily find and change instances in the database if the file for this category is changed)
+		// (we could check for duplicates but the probability of one occurring is negligible)
+		const fileName = randomBytes(8).toString('hex') + "_" + sha256 + "." + fileType ;
 		const fileData = new FileData({foreignId, fileName, category, dataBase64}) ;
 
 		console.log("Creating file-data entry in DB:", fileName) ; 
