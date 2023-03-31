@@ -74,3 +74,23 @@ export async function removeImage(req, res) {
 		return res.status(500).send({message: "Something went wrong!"})
 	}
 }
+
+// Handle user-name change
+export async function changeUserName(req, res) {
+	if (!ensurePresent(req.body, ['currentPassword', 'newUserName'])) {
+		return res.status(400).send({message: "Bad request"}) ;
+	}
+
+	try {
+		await ProfileLib.updateUserName(req.session.userId, req.body.currentPassword, req.body.newUserName) ;
+  	return res.send({ result: true }) ;
+	}
+	catch(err) {
+		if (err === 'INVALID_USERNAME') return res.status(400).send({ message: 'Invalid username - must not start with "user"' }) ;
+		else if (err === 'INVALID_USERNAME_LEN') return res.status(400).send({ message: 'Invalid username (must be at least 8 characters)' }) ;
+		else if (err === 'INVALID_PASSWORD') return res.status(401).send({ message: 'Incorrect password' }) ;
+		else if (err === 'ALREADY_CHANGED') return res.status(401).send({ message: 'Username has already been changed' }) ;
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}

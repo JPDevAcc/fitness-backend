@@ -25,6 +25,7 @@ router.post("/changepass", userController.userChangePwd); // Change user-passwor
 router.post("/delaccount", userController.userDeleteAccount); // Delete user-account
 router.get("/userdata", userDataController.retrieve); // Retrieve user-data (prefs, profile, etc)
 router.patch("/prefs/:fieldName", userPrefsController.updatePrefs); // Update user-prefs
+router.post("/profile/userName", userProfileController.changeUserName); // Update username for user
 router.post("/profile/image/:category", userProfileController.updateImage); // Update image for user
 router.delete("/profile/image/:category", userProfileController.removeImage); // Remove image for user
 router.patch("/profile/:fieldName", userProfileController.updateProfile); // Update user-profile
