@@ -17,7 +17,7 @@ export const authenticate = async (req, res) => {
     }
     else {
 				// Create database entries for first-login
-				await ProfileLib.setInitialRandomUserName(user._id) ;
+				await ProfileLib.initialProfileSetup(user._id) ;
 
         // Token-based secret
         const token = crypto.randomBytes(16).toString('base64');
