@@ -4,17 +4,22 @@ import User from "../models/user.mjs";
 import UserData from "../models/userData.mjs";
 import Post from "../models/post.mjs";
 import Comment from "../models/comment.mjs";
-
 import bcrypt from "bcryptjs";
+import { randomBytes } from 'crypto';
 
 export default class ProfileLib {
-	// Set a random username (on first login)
-	static async setInitialRandomUserName(userId) {
+	// Set (on first login) a (random) unique username and unique image url (denoting no image)
+	static async initialProfileSetup(userId) {
+		const imageUrl = 'none_' + randomBytes(32).toString('hex') ;
 		while (true) {
 			// Generate random username | 8 * 4 = 32 bits = 16 bits collision resistance
 			// (should be okay until we have 100K+ users who don't bother changing their username)
 			const userName = "User_" + nonCryptoRandHexString(8) ;
-			const userData = new UserData({ _id: userId, "userProfile.userName": userName }) ;
+			const userData = new UserData({
+				_id: userId,
+				"userProfile.userName": userName,
+				"userProfile.imageUrl": imageUrl
+			}) ;
 			console.log("Trying new UserData ", userData) ;
 
 			try {
@@ -38,6 +43,9 @@ export default class ProfileLib {
 	}
 
 	static async updateProfileImageUrl(userId, newImageUrl) {
+		// Generate a unique url denoting no-image if removing the image (so we can still do find-and-replace on them in the future) 
+		if (newImageUrl === "") newImageUrl = 'none_' + randomBytes(32).toString('hex') ;
+
 		// Get userData and old image url
 		const userData = await UserData.findOne({ _id: userId }) ;
 		if (!userData) throw "SELF_NOT_FOUND"; // (shouldn't happen except for possible race condition)
