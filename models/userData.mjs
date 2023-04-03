@@ -11,7 +11,8 @@ const userDataSchema = Schema({
 	contactRequests: [ContactRequest],
 	contacts: [Contact],
 	messageMetas: [MessageMeta],
-	recipes: Array
+	recipes: Array,
+	customWorkouts: Array,
 })
 
 export default model('UserData', userDataSchema);

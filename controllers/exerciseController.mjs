@@ -1,5 +1,6 @@
 import axios from "axios";
-
+import CustomWorkout from "../models/customWorkout.mjs";
+import UserData from "../models/userData.mjs"
 
 function responseStatusCheck(res) {
 
@@ -20,10 +21,12 @@ export async function getBodyparts(req, res) {
 		})
 
 		const request = await axios.get(`${url}`,
-        {headers:{
-			"X-RapidAPI-Key": key,
-            'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
-        }})
+			{
+				headers: {
+					"X-RapidAPI-Key": key,
+					'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
+				}
+			})
 		const response = await responseStatusCheck(request);
 		const data = response.data;
 
@@ -31,16 +34,16 @@ export async function getBodyparts(req, res) {
 	}
 
 	catch (err) {
-        console.log (err)
+		console.log(err)
 		return res.status(500).send({ message: "Something went wrong!" })
 	}
 }
 
 export async function getExercise(req, res) {
-	console.log("MOO! I am not a cow! (but I like exercise!)") ;
+	console.log("MOO! I am not a cow! (but I like exercise!)");
 
 	const key = process.env.EXERCISEAPI;
-	const bodypart = req.params.bodypart ;
+	const bodypart = req.params.bodypart;
 	const url = `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodypart}`
 	try {
 		const params = new URLSearchParams({
@@ -48,10 +51,12 @@ export async function getExercise(req, res) {
 		})
 
 		const request = await axios.get(`${url}`,
-        {headers:{
-			"X-RapidAPI-Key": key,
-            'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
-        }})
+			{
+				headers: {
+					"X-RapidAPI-Key": key,
+					'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
+				}
+			})
 		const response = await responseStatusCheck(request);
 		const data = response.data;
 
@@ -59,7 +64,34 @@ export async function getExercise(req, res) {
 	}
 
 	catch (err) {
-        console.log (err)
+		console.log(err)
+		return res.status(500).send({ message: "Something went wrong!" })
+	}
+}
+
+export async function addCustomWorkout(req, res) {
+	try {
+		// const userData = await UserData.findOne({ user: req.user._id });
+		const customWorkout = new CustomWorkout(req.body);
+		customWorkout.date = new Date();
+		await customWorkout.save();
+
+		// userData.customWorkouts.push(customWorkout.title);
+		return res.send({ message: "Custom workout added!" });
+	}
+	catch (err) {
+		console.log(err)
+		return res.status(500).send({ message: "Something went wrong!" })
+	}
+}
+
+export async function getCustomWorkouts(req, res) {
+	try {
+		const customWorkouts = await CustomWorkout.find();
+		return res.send(customWorkouts);
+	}
+	catch (err) {
+		console.log(err)
 		return res.status(500).send({ message: "Something went wrong!" })
 	}
 }

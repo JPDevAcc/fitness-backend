@@ -17,7 +17,8 @@ export async function getUnsplashPic(req, res) {
 	try {
 		const params = new URLSearchParams({
 			client_id: key,
-			count: 1
+			count: 1,
+			query: req.params.query
 		})
 
 		const request = await axios.get(`${url}?${params.toString()}`)
