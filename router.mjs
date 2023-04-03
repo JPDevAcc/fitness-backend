@@ -12,7 +12,7 @@ import {
     getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe,
     getIngredientInfo, getIngredientID, getUsersRecipes, checkRecipe
 } from "./controllers/recipeController.mjs";
-import { getBodyparts, getExercise } from "./controllers/exerciseController.mjs";
+import { getBodyparts, getExercise, addCustomWorkout, getCustomWorkouts } from "./controllers/exerciseController.mjs";
 import {
     addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost,
     getComment, getLikesArray, getLolsArray, getCommentArray, findUser, likePost, lolPost
@@ -45,9 +45,12 @@ router.get("/messages/:messageId", socialController.retrieveMessageContent); // 
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API
+router.get("/unsplash/:query", getUnsplashPic); // Get picture from API (with query string)
 router.post("/addPicture", addPicture); // Add picture to database
 router.get("/bodyparts", getBodyparts);
 router.get("/exercises/bodypart/:bodypart", getExercise);
+router.post("/customWorkout", addCustomWorkout); // Add custom workout to database
+router.get("/customWorkouts", getCustomWorkouts); // Get custom workouts from database
 
 router.get("/recipe/:query", getRecipe); // Get recipe from API
 router.get("/fullrecipe/:id", getFullRecipe); // Get FULL recipe from API
