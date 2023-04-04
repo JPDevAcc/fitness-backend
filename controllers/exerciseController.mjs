@@ -71,12 +71,14 @@ export async function getExercise(req, res) {
 
 export async function addCustomWorkout(req, res) {
 	try {
-		// const userData = await UserData.findOne({ user: req.user._id });
+		const userData = await UserData.findOne({ _id: req.session.userId });
 		const customWorkout = new CustomWorkout(req.body);
 		customWorkout.date = new Date();
+		customWorkout.username = userData.userProfile.userName;
 		await customWorkout.save();
 
-		// userData.customWorkouts.push(customWorkout.title);
+		userData.customWorkouts.push(customWorkout.id);
+		await userData.save();
 		return res.send({ message: "Custom workout added!" });
 	}
 	catch (err) {
@@ -88,6 +90,18 @@ export async function addCustomWorkout(req, res) {
 export async function getCustomWorkouts(req, res) {
 	try {
 		const customWorkouts = await CustomWorkout.find();
+		return res.send(customWorkouts);
+	}
+	catch (err) {
+		console.log(err)
+		return res.status(500).send({ message: "Something went wrong!" })
+	}
+}
+
+export async function getCustomWorkoutsForuser(req, res) {
+	try {
+		const userData = await UserData.findOne({ _id: req.session.userId });
+		const customWorkouts = await CustomWorkout.find({ id: { $in: userData.customWorkouts } });
 		return res.send(customWorkouts);
 	}
 	catch (err) {
