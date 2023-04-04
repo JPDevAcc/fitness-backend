@@ -1,4 +1,3 @@
-import { ensurePresent } from "../utils/utils.mjs";
 import SocialLib from "../libs/socialLib.mjs";
 import * as v from "../utils/validation.mjs";
 
@@ -129,7 +128,7 @@ export async function removeMessage(req, res) {
 export async function retrieveMessageContent(req, res) {
 	// Validation
 	if (!v.isAsciiString(req.params.messageId)) return res.status(400).send({message: "Bad request"}) ;
-	
+
 	try {
   	const message = await SocialLib.retrieveMessageContent(req.session.userId, req.params.messageId) ;
 		return res.send(message) ;
