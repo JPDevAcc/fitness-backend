@@ -9,6 +9,7 @@ export async function updateProfile(req, res) {
 		'userName',
 		'onboardingStageComplete',
 		'bio', 'bioPrivacy',
+		'location', 'locationPrivacy',
 		'age', 'agePrivacy',
 		'weight', 'weightPrivacy',
 		'height', 'heightPrivacy',
