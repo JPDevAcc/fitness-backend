@@ -1,11 +1,3 @@
-// Ensure specified fieles are present in data
-export function ensurePresent(data, fields) {
-	for (const field of fields) {
-		if (data[field] === undefined || data[field] === null) return false ;
-	}
-	return true ;
-}
-
 // Trim string to specified length, and add ellipsis if characters were removed
 export function trimWithEllipsis(str, maxLen) {
 	if (str.length <= maxLen) return str ;
