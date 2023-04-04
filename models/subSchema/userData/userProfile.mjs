@@ -5,6 +5,8 @@ const userProfileSchema = Schema({
 	onboardingStageComplete: Boolean,
   bio: String,
 	bioPrivacy: String,
+	location: String,
+	locationPrivacy: String,
 	age: String,
 	agePrivacy: String,
 	weight: Number,
