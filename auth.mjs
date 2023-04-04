@@ -5,6 +5,7 @@ import User from './models/user.mjs';
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import ProfileLib from "./libs/profileLib.mjs";
+import UserValueHistoryLib from "./libs/userValueHistoryLib.mjs";
 
 // Init dotenv
 config();
@@ -18,6 +19,7 @@ export const authenticate = async (req, res) => {
     else {
 				// Create database entries for first-login
 				await ProfileLib.initialProfileSetup(user._id) ;
+				await UserValueHistoryLib.initialHistorySetup(user._id) ;
 
         // Token-based secret
         const token = crypto.randomBytes(16).toString('base64');
