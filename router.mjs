@@ -13,11 +13,13 @@ import {
     getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe,
     getIngredientInfo, getIngredientID, getUsersRecipes, checkRecipe
 } from "./controllers/recipeController.mjs";
-import { getBodyparts, getExercise, addCustomWorkout, getCustomWorkouts } from "./controllers/exerciseController.mjs";
+import { getBodyparts, getExercise, addCustomWorkout, getCustomWorkouts, getCustomWorkoutsForuser } from "./controllers/exerciseController.mjs";
 import {
     addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost,
     getComment, getLikesArray, getLolsArray, getCommentArray, findUser, likePost, lolPost
 } from "./controllers/communityPostsController.mjs";
+
+import { getQuotes } from "./controllers/quotesController.mjs";
 
 // Init dotenv
 config();
@@ -54,6 +56,7 @@ router.get("/bodyparts", getBodyparts);
 router.get("/exercises/bodypart/:bodypart", getExercise);
 router.post("/customWorkout", addCustomWorkout); // Add custom workout to database
 router.get("/customWorkouts", getCustomWorkouts); // Get custom workouts from database
+router.get("/customforuser", getCustomWorkoutsForuser); // Get custom workouts for user from database
 
 router.get("/recipe/:query", getRecipe); // Get recipe from API
 router.get("/fullrecipe/:id", getFullRecipe); // Get FULL recipe from API
@@ -78,6 +81,8 @@ router.get("/finduser/:username", findUser) // Find user by username
 router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)
 router.get("/userrecipes/", getUsersRecipes)
+
+router.post("/quote", getQuotes); // Get quote from API
 
 // DEVELOPMENT-ONLY
 if (process.env.NODE_ENV === 'development') {

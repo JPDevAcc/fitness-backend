@@ -131,7 +131,7 @@ export async function getPostById(req, res) {
 export async function getLikesArray(req, res) {
     try {
         const post = await Post.findOne({ _id: req.params.postId });
-        return res.send(post.likes);
+        return res.send(post.likes.length);
     } catch (err) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
@@ -140,7 +140,7 @@ export async function getLikesArray(req, res) {
 export async function getLolsArray(req, res) {
     try {
         const post = await Post.findOne({ _id: req.params.postId });
-        return res.send(post.lols);
+        return res.send(post.lols.length);
     } catch (err) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
@@ -149,7 +149,7 @@ export async function getLolsArray(req, res) {
 export async function getCommentArray(req, res) {
     try {
         const post = await Post.findOne({ _id: req.params.postId });
-        return res.send(post.comments);
+        return res.send(post.comments.length);
     } catch (err) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
@@ -160,7 +160,7 @@ export async function findUser(req, res) {
     try {
         const user = await UserData.findOne({ "userProfile.userName": req.params.username });
         console.log(req.params.username)
-        return res.send(user);
+        return res.send(user.userProfile);
     } catch (err) {
         console.log(err)
         return res.status(500).send({ message: "Something went wrong!" })
