@@ -6,6 +6,7 @@ import Post from "../models/post.mjs";
 import Comment from "../models/comment.mjs";
 import bcrypt from "bcryptjs";
 import { randomBytes } from 'crypto';
+import UserValueHistoryLib from "./userValueHistoryLib.mjs";
 
 export default class ProfileLib {
 	// Set (on first login) a (random) unique username and unique image url (denoting no image)
@@ -40,6 +41,11 @@ export default class ProfileLib {
 		const filter = { _id: userId } ;
 		const update = { $set: { [`userProfile.${fieldName}`]: value } } ;
 		await UserData.updateOne(filter, update); // (user profile should already exist at this point)
+
+		// Update weight / height history if one of those fields was modified
+		if (fieldName === 'weight' || fieldName === 'height') {
+			UserValueHistoryLib.setFieldForCurrentDay(userId, fieldName, value) ;
+		}
 	}
 
 	static async updateProfileImageUrl(userId, newImageUrl) {

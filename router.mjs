@@ -4,6 +4,7 @@ import * as userController from "./controllers/userController.mjs"
 import * as userDataController from "./controllers/userDataController.mjs";
 import * as userPrefsController from "./controllers/userPrefsController.mjs";
 import * as userProfileController from "./controllers/userProfileController.mjs";
+import * as userValueHistoryController from "./controllers/userValueHistoryController.mjs";
 import * as notificationsController from "./controllers/notificationsController.mjs";
 import * as socialController from "./controllers/socialController.mjs";
 import * as testController from "./controllers/testController.mjs";
@@ -42,6 +43,7 @@ router.post("/messages/:destUserName", socialController.sendMessage); // Send a 
 router.delete("/messages/:messageId", socialController.removeMessage); // Remove a message
 router.get("/messageMetas", socialController.retrieveMessageMetas); // Retrieve list of message metadata
 router.get("/messages/:messageId", socialController.retrieveMessageContent); // Retrieve message content
+router.get("/userValueHistory/getFirstValueForField/:fieldName", userValueHistoryController.getFirstValueForField); // Retrieve message content
 
 // API relays
 router.get("/unsplash", getUnsplashPic); // Get picture from API

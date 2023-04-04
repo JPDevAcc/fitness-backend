@@ -18,7 +18,13 @@ const userProfileSchema = Schema({
 	imageUrl: String,
 	imagePrivacy: String,
 	selectedGoalIds: Array,
-	selectedGoalIdsPrivacy: String
+	selectedGoalIdsPrivacy: String,
+	weightGoalValue: Number,
+	weightGoalUnits: {
+		type: String,
+    enum : ['absolute', 'bmi', 'bmiPrime'],
+	},
+	weightGoalPrivacy: String
 })
 
 export default userProfileSchema ;

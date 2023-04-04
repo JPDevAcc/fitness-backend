@@ -15,7 +15,8 @@ export async function updateProfile(req, res) {
 		'dietPractice', 'dietPracticePrivacy',
 		'dietType', 'dietTypePrivacy',
 		'imagePrivacy',
-		'selectedGoalIds', 'selectedGoalIdsPrivacy' /* TODO: Check contents of array as well */
+		'selectedGoalIds', 'selectedGoalIdsPrivacy', /* TODO: Check contents of array as well */
+		'weightGoalValue', 'weightGoalUnits', 'weightGoalPrivacy'
 	] ;
 	const fieldName = req.params.fieldName ;
 	if (!updatableFields.includes(fieldName)) return res.status(400).send({message: "Invalid request"}) ;
