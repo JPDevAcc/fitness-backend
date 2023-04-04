@@ -1,32 +1,34 @@
 import { Schema } from 'mongoose';
 
+const PrivacyType = { type: String, enum : ['pri', 'mem', 'pub'], default: 'pri' } ;
+
 const userProfileSchema = Schema({
 	userName: { type: String, unique: true }, // Note: Might want to make this case-insensitive too by re-creating the collection with appropriate collation options
 	onboardingStageComplete: Boolean,
   bio: String,
-	bioPrivacy: String,
+	bioPrivacy: PrivacyType,
 	location: String,
-	locationPrivacy: String,
+	locationPrivacy: PrivacyType,
 	age: String,
-	agePrivacy: String,
+	agePrivacy: PrivacyType,
 	weight: Number,
-	weightPrivacy: String,
+	weightPrivacy: PrivacyType,
 	height: Number,
-	heightPrivacy: String,
+	heightPrivacy: PrivacyType,
 	dietPractice: String,
-	dietPracticePrivacy: String,
+	dietPracticePrivacy: PrivacyType,
 	dietType: String,
-	dietTypePrivacy: String,
+	dietTypePrivacy: PrivacyType,
 	imageUrl: String,
-	imagePrivacy: String,
+	imagePrivacy: PrivacyType,
 	selectedGoalIds: Array,
-	selectedGoalIdsPrivacy: String,
+	selectedGoalIdsPrivacy: PrivacyType,
 	weightGoalValue: Number,
 	weightGoalUnits: {
 		type: String,
     enum : ['absolute', 'bmi', 'bmiPrime'],
 	},
-	weightGoalPrivacy: String
+	weightGoalPrivacy: PrivacyType
 })
 
 export default userProfileSchema ;
