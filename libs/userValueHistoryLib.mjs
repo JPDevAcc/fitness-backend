@@ -15,10 +15,11 @@ export default class InitialHistorySetup {
 
 	static async setFieldForCurrentDay(userId, fieldName, value) {
 		const dateOnlyString = new Date().toISOString().split('T')[0] ;
-
-		const filter = { _id: userId, "historyValues.dateOnly": dateOnlyString} ;
-		const update = { $set: { [`historyValues.$[].${fieldName}`]: value, "historyValues.$[].dateOnly": dateOnlyString } } ;
-		const res = await UserValueHistory.updateOne(filter, update) ;
+		const filter = { _id: userId, "historyValues.dateOnly": dateOnlyString } ;
+		const update = { $set: { [`historyValues.$[elem].${fieldName}`]: value } } ;
+		const arrayFilters = [{ "elem.dateOnly": dateOnlyString }] ;
+		
+		const res = await UserValueHistory.updateOne(filter, update, {arrayFilters}) ;
 
 		if (res.matchedCount === 0) {
 			const historyEntryData = { dateOnly: dateOnlyString, [fieldName]: value } ;
