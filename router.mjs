@@ -43,6 +43,7 @@ router.post("/messages/:destUserName", socialController.sendMessage); // Send a 
 router.delete("/messages/:messageId", socialController.removeMessage); // Remove a message
 router.get("/messageMetas", socialController.retrieveMessageMetas); // Retrieve list of message metadata
 router.get("/messages/:messageId", socialController.retrieveMessageContent); // Retrieve message content
+router.get("/usersby/location/:location", socialController.findUsersByLocation); // Get list of usernames for users in given location
 router.get("/userValueHistory/getFirstValueForField/:fieldName", userValueHistoryController.getFirstValueForField); // Retrieve message content
 
 // API relays
