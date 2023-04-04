@@ -1,12 +1,14 @@
 import User from "../models/user.mjs";
 import bcrypt from "bcryptjs";
-import { ensurePresent } from "../utils/utils.mjs";
+import * as v from "../utils/validation.mjs";
 
 // Handle user registration
 export async function userRegister(req, res) {
-	const userData = req.body ;
-	userData.username = userData.email ; // (just use e-mail address for username for now)
-	const user = new User(req.body)
+	// Validation
+	if (!v.isEmail(req.body.email)) return res.status(400).send({message: "Bad request"}) ;
+	if (!v.isString(req.body.password, 8)) return res.status(400).send({message: "Bad request"}) ;
+
+	const user = new User({email: req.body.email, password: req.body.password}) ;
 	try {
 		user.password = bcrypt.hashSync(user.password, 8);
 
@@ -20,10 +22,9 @@ export async function userRegister(req, res) {
 
 // Handle password change
 export async function userChangePwd(req, res) {
-	if (!ensurePresent(req.body, ['currentPwd', 'newPwd'])) {
-		res.status(400).send({message: "Bad request"})
-		return ;
-	}
+	// Validation
+	if (!v.isString(req.body.currentPwd, 8)) return res.status(400).send({message: "Bad request"}) ;
+	if (!v.isString(req.body.newPwd, 8)) return res.status(400).send({message: "Bad request"}) ;
 
 	try {
 		// Get user
@@ -50,10 +51,8 @@ export async function userChangePwd(req, res) {
 
 // Handle account deletion
 export async function userDeleteAccount(req, res) {
-	if (!ensurePresent(req.body, ['currentPwd'])) {
-		res.status(400).send({message: "Bad request"})
-		return ;
-	}
+	// Validation
+	if (!v.isString(req.body.currentPwd, 8)) return res.status(400).send({message: "Bad request"}) ;
 
 	try {
 		// Get user

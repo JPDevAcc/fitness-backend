@@ -1,10 +1,11 @@
 import UserValueHistory from "../models/userValueHistory.mjs";
+import * as v from "../utils/validation.mjs";
 
 // Handle user-profile updates
 export async function getFirstValueForField(req, res) {
-	const validFields = ['weight', 'height'] ;
+	// Validation
 	const fieldName = req.params.fieldName ;
-	if (!validFields.includes(fieldName)) return res.status(400).send({message: "Invalid request"}) ;
+	if (!v.isStringOneOf(fieldName, ['weight', 'height'])) return res.status(400).send({message: "Bad request"}) ;
 
 	try {
   	const valueHistory = await UserValueHistory.findOne({_id: req.session.userId, [`historyValues.${fieldName}`] : {$exists: true}}).sort({ dateOnly: 1 })
