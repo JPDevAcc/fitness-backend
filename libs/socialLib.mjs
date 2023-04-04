@@ -165,4 +165,10 @@ export default class SocialLib {
 		if (!message) throw "MESSAGE_NOT_FOUND" ;
 		return message.messageContent ;
 	}
+
+	static async findUsersByLocation(location) {
+		const filter = { "userProfile.location": location, "userProfile.locationPrivacy": {$ne: 'pri'} } ;
+		const userDatas = await UserData.find(filter) ;
+		return userDatas.map(userData => userData.userProfile.userName) ;
+	}
 }

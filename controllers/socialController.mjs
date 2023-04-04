@@ -120,3 +120,15 @@ export async function retrieveMessageContent(req, res) {
 		return res.status(500).send({message: "Something went wrong!"})
 	}
 }
+
+// Get list of usernames for users in given location
+export async function findUsersByLocation(req, res) {
+	try {
+  	const userNames = await SocialLib.findUsersByLocation(req.params.location) ;
+		return res.send(userNames) ;
+	}
+	catch(err) {
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
