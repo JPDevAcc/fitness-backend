@@ -68,20 +68,20 @@ export default class ProfileLib {
 			{
 				model: UserData,
 				filter: {"contactRequests.sourceImageUrl": oldImageUrl},
-				update: {$set: {"contactRequests.$[].sourceImageUrl": newImageUrl}},
-				arrayFilter: {"contactRequests.sourceImageUrl": oldImageUrl}
+				update: {$set: {"contactRequests.$[elem].sourceImageUrl": newImageUrl}},
+				arrayFilters: [{"elem.sourceImageUrl": oldImageUrl}]
 			},
 			{
 				model: UserData,
 				filter: {"contacts.imageUrl": oldImageUrl},
-				update: {$set: {"contacts.$[].imageUrl": newImageUrl}},
-				arrayFilter: {"contacts.imageUrl": oldImageUrl}
+				update: {$set: {"contacts.$[elem].imageUrl": newImageUrl}},
+				arrayFilters: [{"elem.imageUrl": oldImageUrl}]
 			},
 			{
 				model: UserData,
 				filter: {"messageMetas.sourceImageUrl": oldImageUrl},
-				update: {$set: {"messageMetas.$[].sourceImageUrl": newImageUrl}},
-				arrayFilter: {"messageMetas.sourceImageUrl": oldImageUrl}
+				update: {$set: {"messageMetas.$[elem].sourceImageUrl": newImageUrl}},
+				arrayFilters: [{"elem.sourceImageUrl": oldImageUrl}]
 			},
 			{
 				model: Post,
@@ -95,9 +95,9 @@ export default class ProfileLib {
 			}
 		] ;
 
-		for (const {model, filter, update, arrayFilter} of updateDefs) {
-			if (arrayFilter) await model.updateMany(filter, update, {arrayFilter}) ;
-			else await model.updateMany(filter, update, {arrayFilter}) ;
+		for (const {model, filter, update, arrayFilters} of updateDefs) {
+			if (arrayFilters) await model.updateMany(filter, update, {arrayFilters}) ;
+			else await model.updateMany(filter, update) ;
 		}
 	}
 
@@ -135,20 +135,20 @@ export default class ProfileLib {
 			{
 				model: UserData,
 				filter: {"contactRequests.sourceUserName": oldUserName},
-				update: {$set: {"contactRequests.$[].sourceUserName": newUserName}},
-				arrayFilter: {"contactRequests.sourceUserName": oldUserName}
+				update: {$set: {"contactRequests.$[elem].sourceUserName": newUserName}},
+				arrayFilters: [{"elem.sourceUserName": oldUserName}]
 			},
 			{
 				model: UserData,
 				filter: {"contacts.userName": oldUserName},
-				update: {$set: {"contacts.$[].userName": newUserName}},
-				arrayFilter: {"contacts.userName": oldUserName}
+				update: {$set: {"contacts.$[elem].userName": newUserName}},
+				arrayFilters: [{"elem.userName": oldUserName}]
 			},
 			{
 				model: UserData,
 				filter: {"messageMetas.sourceUserName": oldUserName},
-				update: {$set: {"messageMetas.$[].sourceUserName": newUserName}},
-				arrayFilter: {"messageMetas.sourceUserName": oldUserName}
+				update: {$set: {"messageMetas.$[elem].sourceUserName": newUserName}},
+				arrayFilters: [{"elem.sourceUserName": oldUserName}]
 			},
 			{
 				model: Post,
@@ -162,9 +162,9 @@ export default class ProfileLib {
 			}
 		] ;
 
-		for (const {model, filter, update, arrayFilter} of updateDefs) {
-			if (arrayFilter) await model.updateMany(filter, update, {arrayFilter}) ;
-			else await model.updateMany(filter, update, {arrayFilter}) ;
+		for (const {model, filter, update, arrayFilters} of updateDefs) {
+			if (arrayFilters) await model.updateMany(filter, update, {arrayFilters}) ;
+			else await model.updateMany(filter, update) ;
 		}
 	}
 }
