@@ -16,6 +16,9 @@ config();
 // Express setup + middleware stack
 const app = express();
 
+// Trust the proxy so that requests are marked secure and cookies are sent
+app.set("trust proxy", true);
+
 // CORS
 const corsOptions = {
   origin: true,
