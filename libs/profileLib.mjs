@@ -9,6 +9,53 @@ import { randomBytes } from 'crypto';
 import UserValueHistoryLib from "./userValueHistoryLib.mjs";
 
 export default class ProfileLib {
+	// Retrieve profile-data according to privacy settings
+	static async retrieveProfile(currentUserId, userName) {
+		const userData = await UserData.findOne({ "userProfile.userName": userName });
+		if (!userData) throw "USER_NOT_FOUND" ;
+		const userProfile = userData.userProfile.toObject() ;
+
+		// Determine access-level of current user
+		let accessLevel ;
+		if (!currentUserId) accessLevel = 0 ; // (public-only)
+		else if (currentUserId !== userData._id.toString()) accessLevel = 1 // (members-only)
+		else accessLevel = 2 ; // (private)
+
+		// Lookup table for access levels
+		const privacySettingToLevel = {
+			'pub' : 0,
+			'mem' : 1,
+			'pri' : 2
+		} ;
+
+		console.log("ACCESS:", currentUserId, userData._id.toString(), accessLevel) ;
+		console.log(userProfile) ;
+		
+		// Build censored profile-data object
+		// (username is already known, but included here for ease-of-access)
+		const userProfileCensored = {userName: userProfile.userName} ;
+		// (special handling for weight goal as it's split into two different fields)
+		const weightGoalPrivacyLevel = privacySettingToLevel[userProfile.weightGoalPrivacy] ;
+		if (accessLevel >= weightGoalPrivacyLevel) {
+			userProfileCensored.weightGoalValue = userProfile.weightGoalValue ;
+			userProfileCensored.weightGoalUnits = userProfile.weightGoalUnits ;
+		}
+		// (other fields the current user has access to and all the privacy settings)
+		for (const [fieldName, value] of Object.entries(userProfile)) {
+			console.log(fieldName, /Privacy$/.test(fieldName), userProfile[fieldName + 'Privacy']) ;
+			if (/Privacy$/.test(fieldName)) userProfileCensored[fieldName] = value ; // (include the privacy settings themselves)
+			else {
+				const privacySetting = userProfile[fieldName + 'Privacy'] ;
+				if (privacySetting) {
+					const privacyLevel = privacySettingToLevel[privacySetting] ;
+					if (accessLevel >= privacyLevel) userProfileCensored[fieldName] = value ; // (include the field if current user has sufficient access)
+				}
+			}
+		}
+
+		return userProfileCensored ;
+	}
+
 	// Set (on first login) a (random) unique username and unique image url (denoting no image)
 	static async initialProfileSetup(userId) {
 		const imageUrl = 'none_' + randomBytes(32).toString('hex') ;

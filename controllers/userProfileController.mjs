@@ -3,6 +3,22 @@ import FileDataLib from "../libs/fileDataLib.mjs";
 import ProfileLib from "../libs/profileLib.mjs";
 import * as v from "../utils/validation.mjs";
 
+// Retrieve user-profile
+export async function getProfile(req, res) {
+	const userName = req.params.userName ;
+	if (!v.isAsciiString(userName, 8)) return res.status(400).send({message: "Bad request"}) ;
+
+	try {
+  	const userProfile = await ProfileLib.retrieveProfile(req.session.userId, userName) ;
+  	return res.send(userProfile) ;
+	}
+	catch(err) {
+		if (err === "USER_NOT_FOUND") return res.status(404).send({message: "User not found"}) ;
+		console.error(err) ;
+		return res.status(500).send({message: "Something went wrong!"})
+	}
+}
+
 // Handle user-profile updates
 export async function updateProfile(req, res) {
 	const fieldName = req.params.fieldName ;
@@ -17,7 +33,7 @@ export async function updateProfile(req, res) {
 	}
 	else if ([
 		'onboardingStageComplete', 'bioPrivacy', 'locationPrivacy', 'agePrivacy', 'weightPrivacy',
-		'heightPrivacy', 'dietPracticePrivacy', 'dietTypePrivacy', 'imagePrivacy', 'selectedGoalIdsPrivacy',
+		'heightPrivacy', 'dietPracticePrivacy', 'dietTypePrivacy', 'imageUrlPrivacy', 'selectedGoalIdsPrivacy',
 		'weightGoalPrivacy'
 	].includes(fieldName)) {
 		if (!v.isStringOneOf(value, ['pri', 'mem', 'pub'])) return res.status(400).send({message: "Bad request"}) ;

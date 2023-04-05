@@ -20,7 +20,7 @@ const userProfileSchema = Schema({
 	dietType: String,
 	dietTypePrivacy: PrivacyType,
 	imageUrl: String,
-	imagePrivacy: PrivacyType,
+	imageUrlPrivacy: PrivacyType,
 	selectedGoalIds: Array,
 	selectedGoalIdsPrivacy: PrivacyType,
 	weightGoalValue: Number,
