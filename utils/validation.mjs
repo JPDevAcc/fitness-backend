@@ -24,7 +24,8 @@ export function isStringOneOf(value, opts) {
 }
 
 // Number or numeric string
-export function isNumeric(value, minValue = -Infinity, maxValue = +Infinity) {
+export function isNumeric(value, allowNone = true, minValue = -Infinity, maxValue = +Infinity) {
+	if (allowNone && (value === null || value === '')) return true ;
 	if ((typeof value) === 'number' && value >= minValue && value <= maxValue) return true ;
 	if ((typeof value) !== 'string') return false ;
 
@@ -36,7 +37,8 @@ export function isNumeric(value, minValue = -Infinity, maxValue = +Infinity) {
 }
 
 // Integer or integer string
-export function isInteger(value, minValue = -Infinity, maxValue = +Infinity) {
+export function isInteger(value, allowNone = true, minValue = -Infinity, maxValue = +Infinity) {
+	if (allowNone && (value === null || value === '')) return true ;
 	if ((typeof value) === 'number' && Math.floor(value) === value && value >= minValue && value <= maxValue) return true ;
 	if ((typeof value) !== 'string') return false ;
 
