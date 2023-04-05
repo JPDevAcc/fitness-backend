@@ -26,6 +26,14 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Minimal CSRF protection via custom header (to protect the non-authorized routes)
+// (we don't require it for GET requests as they SHOULD be safe)
+function checkCustomHeader(req, res, next) {
+	if (req.method !== 'GET' && !req.headers['x-requested-with']) return res.status(401).send() ; // (we don't care what it's actually set to)
+	next() ;
+}
+app.use(checkCustomHeader) ;
+
 // Other middleware
 app.use(express.json({ limit: "1500kb" }));
 app.use(express.urlencoded({ extended: true, limit: "1500kb" }));
