@@ -114,7 +114,10 @@ export async function getIngredientInfo(req, res) {
         const request = await axios.get(`${url}`,
 
             {
-                params: { amount: req.params.amount, unit: req.params.unit },
+                params: {
+                    amount: req.params.amount,
+                    unit: req.params.unit
+                },
                 headers: {
 
                     'X-RapidAPI-Key': key,
