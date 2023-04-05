@@ -154,15 +154,3 @@ export async function getCommentArray(req, res) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
 }
-
-export async function findUser(req, res) {
-
-    try {
-        const user = await UserData.findOne({ "userProfile.userName": req.params.username });
-        console.log(req.params.username)
-        return res.send(user.userProfile);
-    } catch (err) {
-        console.log(err)
-        return res.status(500).send({ message: "Something went wrong!" })
-    }
-}

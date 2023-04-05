@@ -16,7 +16,7 @@ import {
 import { getBodyparts, getExercise, addCustomWorkout, getCustomWorkouts, getCustomWorkoutsForuser } from "./controllers/exerciseController.mjs";
 import {
     addCommunityPost, getCommunityPosts, getPostById, addComment, getCommentsForPost,
-    getComment, getLikesArray, getLolsArray, getCommentArray, findUser, likePost, lolPost
+    getComment, getLikesArray, getLolsArray, getCommentArray, likePost, lolPost
 } from "./controllers/communityPostsController.mjs";
 
 import { getQuotes } from "./controllers/quotesController.mjs";
@@ -75,8 +75,6 @@ router.get("/lols/:postId", getLolsArray) // Get lols array for a post
 router.get("/commentarray/:postId", getCommentArray) // Get comment array for a post
 router.post("/like/:postId", likePost) // Like a post
 router.post("/lol/:postId", lolPost) // Lol a post
-
-router.get("/finduser/:username", findUser) // Find user by username
 
 router.post("/addRecipe", addRecipe); // Add recipe to database
 router.get("/allrecipes", getSavedRecipes)

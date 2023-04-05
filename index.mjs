@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import * as auth from "./auth.mjs";
 import * as userController from "./controllers/userController.mjs"
 import * as fileDataController from "./controllers/fileDataController.mjs" ;
+import * as userProfileController from "./controllers/userProfileController.mjs" ;
 import session from "express-session";
 import MemoryStoreClass from "memorystore";
 const MemoryStore = MemoryStoreClass(session);
@@ -75,6 +76,7 @@ app.post("/logout", auth.logout) ; // (note: we allow access even if user isn't 
 // Retrieve raw file (we do this here because the client doesn't send the token for ordinary file requests)
 // (unfortunately this does mean that the user-privacy setting for profile-image public vs members-only is partially ignored - we could in future at least check the cookie)
 app.get("/files/:fileName", fileDataController.getFile) ;
+app.get("/profile/:userName", userProfileController.getProfile); // Retrieve profile for user
 
 // Authorization check
 app.use(auth.authorize) ;
