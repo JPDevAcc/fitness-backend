@@ -18,7 +18,8 @@ export async function getUnsplashPic(req, res) {
 		const params = new URLSearchParams({
 			client_id: key,
 			count: 1,
-			query: req.params.query
+			query: req.params.query,
+			orientation: "landscape"
 		})
 
 		const request = await axios.get(`${url}?${params.toString()}`)
