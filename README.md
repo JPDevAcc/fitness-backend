@@ -1,4 +1,4 @@
-Node/Express backend for fitness-app MEAN-stack group-project
+Node/Express backend for fitness-app MERN-stack group-project
 
 Database: MongoDB (via Mongoose)
 
