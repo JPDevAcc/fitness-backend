@@ -24,7 +24,7 @@ export default class SocialLib {
 		if (contactRequestExisting) throw "ALREADY_EXISTS" ;
 
 		// Check user isn't already a contact
-		const contactData = await UserData.findOne({ "contacts.userName": sourceUserName }) ;
+		const contactData = await UserData.findOne({ _id: sourceUserId, "contacts.userName": destUserName }) ;
 		if (contactData) throw "ALREADY_CONTACT" ;
 
 		// Add contact request
@@ -62,6 +62,10 @@ export default class SocialLib {
 		if (!userDataDest.contactRequests.map(contactReq => contactReq.sourceUserName).includes(sourceUserName)) {
 			throw "NO_CONTACT_REQUEST" ;
 		}
+
+		// Check user isn't already a contact
+		const contactData = await UserData.findOne({ _id: sourceUserId, "contacts.userName": destUserName }) ;
+		if (contactData) throw "ALREADY_CONTACT" ;
 
 		// Add for source
 		{
