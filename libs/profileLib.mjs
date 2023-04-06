@@ -27,9 +27,6 @@ export default class ProfileLib {
 			'mem' : 1,
 			'pri' : 2
 		} ;
-
-		console.log("ACCESS:", currentUserId, userData._id.toString(), accessLevel) ;
-		console.log(userProfile) ;
 		
 		// Build censored profile-data object
 		// (username is already known, but included here for ease-of-access)
@@ -42,7 +39,6 @@ export default class ProfileLib {
 		}
 		// (other fields the current user has access to and all the privacy settings)
 		for (const [fieldName, value] of Object.entries(userProfile)) {
-			console.log(fieldName, /Privacy$/.test(fieldName), userProfile[fieldName + 'Privacy']) ;
 			if (/Privacy$/.test(fieldName)) userProfileCensored[fieldName] = value ; // (include the privacy settings themselves)
 			else {
 				const privacySetting = userProfile[fieldName + 'Privacy'] ;
@@ -68,7 +64,6 @@ export default class ProfileLib {
 				"userProfile.userName": userName,
 				"userProfile.imageUrl": imageUrl
 			}) ;
-			console.log("Trying new UserData ", userData) ;
 
 			try {
 				await userData.save() ;

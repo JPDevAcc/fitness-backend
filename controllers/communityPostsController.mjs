@@ -7,8 +7,6 @@ export async function addCommunityPost(req, res) {
     try {
         const userData = await UserData.findOne({ _id: req.session.userId });
 
-        console.log(userData)
-
         const communityPost = new Post({
             username: userData.userProfile.userName,
             profileImg: userData.userProfile.imageUrl,

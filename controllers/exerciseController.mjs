@@ -40,8 +40,6 @@ export async function getBodyparts(req, res) {
 }
 
 export async function getExercise(req, res) {
-	console.log("MOO! I am not a cow! (but I like exercise!)");
-
 	const key = process.env.EXERCISEAPI;
 	const bodypart = req.params.bodypart;
 	const url = `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodypart}`

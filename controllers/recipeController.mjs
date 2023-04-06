@@ -20,7 +20,6 @@ export async function getRecipe(req, res) {
     const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
     try {
 
-        console.log(req.body)
         const params = new URLSearchParams({
             query: req.params.query
         })
