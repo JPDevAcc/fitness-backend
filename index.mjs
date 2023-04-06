@@ -10,6 +10,7 @@ import * as userProfileController from "./controllers/userProfileController.mjs"
 import session from "express-session";
 import MemoryStoreClass from "memorystore";
 const MemoryStore = MemoryStoreClass(session);
+import expressMongoSanitize from "express-mongo-sanitize";
 
 // Init dotenv
 config();
@@ -68,6 +69,11 @@ app.use(session({
 	resave: false,
 	saveUninitialized: true
 }))
+
+// Sanitise inputs for MongoDB queries
+// This is a first line of defense - user inputs should still be validated
+// TODO: Check that this is actually working
+app.use(expressMongoSanitize());
 
 // Pre-authorization routes
 app.post("/register", userController.userRegister);
