@@ -6,6 +6,6 @@ const userValueHistoryEntrySchema = Schema({
 	dateOnly: String
 }) ;
 
-userValueHistoryEntrySchema.index({ dateTime: 1 }, { unique: true });
+userValueHistoryEntrySchema.index({ dateOnly: 1 }, { unique: false });
 
 export default userValueHistoryEntrySchema ;

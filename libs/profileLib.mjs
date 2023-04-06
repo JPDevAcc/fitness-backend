@@ -91,7 +91,7 @@ export default class ProfileLib {
 
 		// Update weight / height history if one of those fields was modified
 		if (fieldName === 'weight' || fieldName === 'height') {
-			UserValueHistoryLib.setFieldForCurrentDay(userId, fieldName, value) ;
+			await UserValueHistoryLib.setFieldForCurrentDay(userId, fieldName, value) ;
 		}
 	}
 
