@@ -2,8 +2,6 @@ import UserData from "../models/userData.mjs";
 
 export default class NotificationsLib {
 	static async getNotificationsForUser(userId) {
-		console.log("CHECKING FOR NOTIFICATIONS FOR USER WITH ID: ", userId) ;
-
 		const userData = await UserData.findOne({ _id: userId }) ;
 		let notifications = [] ;
 		notifications = [...notifications, ...await this._getMessageNotifications(userData)] ;
