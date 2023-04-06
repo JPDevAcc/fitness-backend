@@ -9,7 +9,7 @@ export async function getFirstValueForField(req, res) {
 
 	try {
   	const valueHistory = await UserValueHistory.findOne({_id: req.session.userId, [`historyValues.${fieldName}`] : {$exists: true}}).sort({ dateOnly: 1 })
-		return res.send({ value: valueHistory.historyValues[0][fieldName] }) ;
+		return res.send({ value: valueHistory?.historyValues[0][fieldName] }) ;
 	}
 	catch(err) {
 		console.error(err) ;
