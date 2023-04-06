@@ -32,6 +32,7 @@ export async function acceptContactRequest(req, res) {
 	catch(err) {
 		if (err === "USER_NOT_FOUND") return res.status(404).send({message: "User not found"}) ;
 		else if (err === "NO_CONTACT_REQUEST") return res.status(404).send({message: "Contact request not found"}) ;
+		else if (err === "ALREADY_CONTACT") return res.status(409).send({message: "This user is already a contact"}) ;
 		console.error(err) ;
 		return res.status(500).send({message: "Something went wrong!"})
 	}
