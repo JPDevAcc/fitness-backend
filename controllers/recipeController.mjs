@@ -1,10 +1,9 @@
 import axios from "axios";
-import Recipe from "../models/recipe.mjs";
-import Picture from "../models/picture.mjs";
-import UserData from "../models/userData.mjs"
+import getRecipeModel from "../models/recipe.mjs";
+import getPictureModel from "../models/picture.mjs";
+import getUserDataModel from "../models/userData.mjs"
 
 function responseStatusCheck(res) {
-
     if (res.status >= 200 && res.status < 300) {
         return Promise.resolve(res);
     } else {
@@ -13,8 +12,6 @@ function responseStatusCheck(res) {
 }
 
 export async function getRecipe(req, res) {
-
-
     const key = process.env.FOOD_API_KEY;
 
     const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
@@ -44,6 +41,8 @@ export async function getRecipe(req, res) {
 }
 
 export async function addRecipe(req, res) {
+	const UserData = getUserDataModel() ;
+	const Recipe = getRecipeModel() ;
     try {
         if (await Recipe.findOne({ id: req.body.id })) {
             const userData = await UserData.findOne({ _id: req.session.userId });
@@ -166,6 +165,8 @@ export async function getIngredientID(req, res) {
 
 
 export async function addPicture(req, res) {
+	const Picture = getPictureModel() ;
+
     const picture = new Picture(req.body);
     try {
 
@@ -179,6 +180,7 @@ export async function addPicture(req, res) {
 }
 
 export async function getSavedRecipes(req, res) {
+	const Recipe = getRecipeModel() ;
     try {
         const recipes = await Recipe.find();
         return res.send(recipes);
@@ -189,6 +191,8 @@ export async function getSavedRecipes(req, res) {
 }
 
 export async function getUsersRecipes(req, res) {
+	const UserData = getUserDataModel() ;
+	const Recipe = getRecipeModel() ;
     try {
         const userData = await UserData.findOne({ _id: req.session.userId });
         const recipes = await Recipe.find({ id: { $in: userData.recipes } });
@@ -199,6 +203,8 @@ export async function getUsersRecipes(req, res) {
 }
 
 export async function checkRecipe(req, res) {
+	const UserData = getUserDataModel() ;
+	
     try {
         const userData = await UserData.findOne({ _id: req.session.userId });
         const recipes = await userData.recipes;

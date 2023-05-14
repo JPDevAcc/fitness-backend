@@ -7,7 +7,6 @@ import * as userProfileController from "./controllers/userProfileController.mjs"
 import * as userValueHistoryController from "./controllers/userValueHistoryController.mjs";
 import * as notificationsController from "./controllers/notificationsController.mjs";
 import * as socialController from "./controllers/socialController.mjs";
-import * as testController from "./controllers/testController.mjs";
 import { getUnsplashPic } from "./controllers/unsplashController.mjs";
 import {
     getRecipe, addPicture, addRecipe, getSavedRecipes, getFullRecipe,
@@ -81,10 +80,5 @@ router.get("/allrecipes", getSavedRecipes)
 router.get("/userrecipes/", getUsersRecipes)
 
 router.post("/quote", getQuotes); // Get quote from API
-
-// DEVELOPMENT-ONLY
-if (process.env.NODE_ENV === 'development') {
-    router.get("/all", testController.getAll); // GET ALL DOCUMENTS FROM DATABASE | TODO: REMOVE IN PRODUCTION!!!!!!!!
-}
 
 export default router;

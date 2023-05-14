@@ -1,8 +1,10 @@
-import UserData from "../models/userData.mjs";
+import getUserDataModel from "../models/userData.mjs";
 import * as v from "../utils/validation.mjs";
 
 // Handle user-profile updates
 export async function updatePrefs(req, res) {
+	const UserData = getUserDataModel() ;
+
 	const fieldName = req.params.fieldName ;
 	const value = req.body.value ;
 

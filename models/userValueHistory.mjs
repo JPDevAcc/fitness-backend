@@ -5,4 +5,5 @@ const userValueHistorySchema = Schema({
 	historyValues: [UserValueHistoryEntry]
 })
 
-export default model('userValueHistory', userValueHistorySchema);
+export { userValueHistorySchema };
+export default () => model(global.userCollectionsPrefix + 'UserValueHistory', userValueHistorySchema) ;

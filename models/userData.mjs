@@ -15,4 +15,5 @@ const userDataSchema = Schema({
 	customWorkouts: Array,
 })
 
-export default model('UserData', userDataSchema);
+export { userDataSchema };
+export default () => model(global.userCollectionsPrefix + 'UserData', userDataSchema) ;

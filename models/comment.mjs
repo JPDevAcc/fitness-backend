@@ -7,4 +7,5 @@ const commentSchema = Schema({
     date: Date
 })
 
-export default model('Comment', commentSchema);
+export { commentSchema };
+export default () => model(global.userCollectionsPrefix + 'Comment', commentSchema) ;

@@ -6,4 +6,5 @@ const recipeSchema = Schema({
     imageUrl: String,
 })
 
-export default model('Recipe', recipeSchema);
+export { recipeSchema };
+export default () => model(global.userCollectionsPrefix + 'Recipe', recipeSchema) ;

@@ -1,10 +1,12 @@
 import { createHash, randomBytes } from 'crypto';
-import FileData from "../models/fileData.mjs"
+import getFileDataModel from "../models/fileData.mjs"
 import { MONGO_ERR_DUPLICATE_KEY } from "../utils/errcodes.mjs";
 
 export default class FileDataLib {
 	// Create a file-data entry
 	static async createFileDataEntry(foreignId, category, dataBlob) {
+		const FileData = getFileDataModel() ;
+
 		const [header, dataBase64] = dataBlob.split(',') ;
 
 		// Calculate SHA256
@@ -36,11 +38,15 @@ export default class FileDataLib {
 
 	// Remove a file-data entry
 	static async removeFileDataEntry(foreignId, category) {
+		const FileData = getFileDataModel() ;
+
 		await FileData.deleteOne({ foreignId, category }) ; // (silently fail if it doesn't exist)
 	}
 
 	// Retrieve file data
 	static async retrieveFileData(fileName) {
+		const FileData = getFileDataModel() ;
+
 		const fileData = await FileData.findOne({fileName}) ;
 		if (!fileData) throw("Not found") ;
 		return fileData.dataBase64 ;

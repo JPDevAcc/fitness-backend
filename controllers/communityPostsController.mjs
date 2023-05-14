@@ -1,8 +1,10 @@
-import Post from '../models/post.mjs';
-import Comment from '../models/comment.mjs';
-import UserData from "../models/userData.mjs"
+import getPostModel from '../models/post.mjs';
+import getCommentModel from '../models/comment.mjs';
+import getUserDataModel from "../models/userData.mjs"
 
 export async function addCommunityPost(req, res) {
+	const UserData = getUserDataModel() ;
+	const Post = getPostModel() ;
 
     try {
         const userData = await UserData.findOne({ _id: req.session.userId });
@@ -25,6 +27,8 @@ export async function addCommunityPost(req, res) {
 }
 
 export async function getCommunityPosts(req, res) {
+	const Post = getPostModel() ;
+
     try {
         const posts = await Post.find();
         return res.send(posts);
@@ -34,6 +38,10 @@ export async function getCommunityPosts(req, res) {
 }
 
 export async function addComment(req, res) {
+	const UserData = getUserDataModel() ;
+	const Comment = getCommentModel() ;
+	const Post = getPostModel() ;
+
     try {
         const userData = await UserData.findOne({ _id: req.session.userId });
 
@@ -56,9 +64,9 @@ export async function addComment(req, res) {
 }
 
 export async function likePost(req, res) {
-    try {
-        const userData = await UserData.findOne({ _id: req.session.userId });
+	const Post = getPostModel() ;
 
+    try {
         const post = await Post.findOne({ _id: req.params.postId });
         if (post.likes.includes(req.session.userId)) {
             post.likes = post.likes.filter(id => id != req.session.userId);
@@ -77,9 +85,9 @@ export async function likePost(req, res) {
 }
 
 export async function lolPost(req, res) {
-    try {
-        const userData = await UserData.findOne({ _id: req.session.userId });
+	const Post = getPostModel() ;
 
+    try {
         const post = await Post.findOne({ _id: req.params.postId });
         if (post.lols.includes(req.session.userId)) {
             post.lols = post.lols.filter(id => id != req.session.userId);
@@ -97,6 +105,9 @@ export async function lolPost(req, res) {
 }
 
 export async function getCommentsForPost(req, res) {
+	const Post = getPostModel() ;
+	const Comment = getCommentModel() ;
+
     try {
         const post = await Post.findOne({ _id: req.params.postId });
         const commentsIds = post.comments;
@@ -109,6 +120,8 @@ export async function getCommentsForPost(req, res) {
 }
 
 export async function getComment(req, res) {
+	const Comment = getCommentModel() ;
+
     try {
         const comment = await Comment.findOne({ _id: req.params.id });
         return res.send(comment);
@@ -118,6 +131,8 @@ export async function getComment(req, res) {
 }
 
 export async function getPostById(req, res) {
+	const Post = getPostModel() ;
+
     try {
         const post = await Post.findOne({ _id: req.params.id });
         return res.send(post);
@@ -127,6 +142,8 @@ export async function getPostById(req, res) {
 }
 
 export async function getLikesArray(req, res) {
+	const Post = getPostModel() ;
+
     try {
         const post = await Post.findOne({ _id: req.params.postId });
         return res.send([post.likes.length]);
@@ -136,6 +153,8 @@ export async function getLikesArray(req, res) {
 }
 
 export async function getLolsArray(req, res) {
+	const Post = getPostModel() ;
+
     try {
         const post = await Post.findOne({ _id: req.params.postId });
         return res.send([post.lols.length]);
@@ -145,6 +164,8 @@ export async function getLolsArray(req, res) {
 }
 
 export async function getCommentArray(req, res) {
+	const Post = getPostModel() ;
+
     try {
         const post = await Post.findOne({ _id: req.params.postId });
         return res.send([post.comments.length]);

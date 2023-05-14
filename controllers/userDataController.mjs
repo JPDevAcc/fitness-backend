@@ -1,6 +1,8 @@
-import UserData from "../models/userData.mjs";
+import getUserDataModel from "../models/userData.mjs";
 
 export async function retrieve(req, res) {
+	const UserData = getUserDataModel() ;
+
 	try {
 		const _id = req.session.userId ;
 		const userData = await UserData.findOne({ _id }) ;

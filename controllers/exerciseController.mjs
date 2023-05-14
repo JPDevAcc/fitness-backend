@@ -1,9 +1,8 @@
 import axios from "axios";
-import CustomWorkout from "../models/customWorkout.mjs";
-import UserData from "../models/userData.mjs"
+import getCustomWorkoutModel from "../models/customWorkout.mjs";
+import getUserDataModel from "../models/userData.mjs"
 
 function responseStatusCheck(res) {
-
 	if (res.status >= 200 && res.status < 300) {
 		return Promise.resolve(res);
 	} else {
@@ -12,14 +11,9 @@ function responseStatusCheck(res) {
 }
 
 export async function getBodyparts(req, res) {
-
 	const key = process.env.EXERCISEAPI;
 	const url = "https://exercisedb.p.rapidapi.com/exercises/bodyPartList"
 	try {
-		const params = new URLSearchParams({
-
-		})
-
 		const request = await axios.get(`${url}`,
 			{
 				headers: {
@@ -44,10 +38,6 @@ export async function getExercise(req, res) {
 	const bodypart = req.params.bodypart;
 	const url = `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodypart}`
 	try {
-		const params = new URLSearchParams({
-
-		})
-
 		const request = await axios.get(`${url}`,
 			{
 				headers: {
@@ -68,6 +58,9 @@ export async function getExercise(req, res) {
 }
 
 export async function addCustomWorkout(req, res) {
+	const UserData = getUserDataModel() ;
+	const CustomWorkout = getCustomWorkoutModel() ;
+
 	try {
 		const userData = await UserData.findOne({ _id: req.session.userId });
 		const customWorkout = new CustomWorkout(req.body);
@@ -86,6 +79,8 @@ export async function addCustomWorkout(req, res) {
 }
 
 export async function getCustomWorkouts(req, res) {
+	const CustomWorkout = getCustomWorkoutModel() ;
+
 	try {
 		const customWorkouts = await CustomWorkout.find();
 		return res.send(customWorkouts);
@@ -97,6 +92,9 @@ export async function getCustomWorkouts(req, res) {
 }
 
 export async function getCustomWorkoutsForuser(req, res) {
+	const UserData = getUserDataModel() ;
+	const CustomWorkout = getCustomWorkoutModel() ;
+
 	try {
 		const userData = await UserData.findOne({ _id: req.session.userId });
 		const customWorkouts = await CustomWorkout.find({ id: { $in: userData.customWorkouts } });
