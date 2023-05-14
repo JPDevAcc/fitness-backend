@@ -12,4 +12,5 @@ const post = Schema({
     lols: Array,
 })
 
-export default model('Post', post);
+export { post };
+export default () => model(global.userCollectionsPrefix + 'Post', post) ;

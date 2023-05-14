@@ -1,10 +1,12 @@
-import UserData from "../models/userData.mjs"
-import Message from "../models/message.mjs";
+import getUserDataModel from "../models/userData.mjs"
+import getMessageModel from "../models/message.mjs";
 import { trimWithEllipsis } from "../utils/utils.mjs";
 import mongoose from "mongoose";
 
 export default class SocialLib {
 	static async addContactRequest(sourceUserId, destUserName) {
+		const UserData = getUserDataModel() ;
+
 		// Source ID -> UserName, Image URL
 		const userDataSrc = await UserData.findOne({ _id: sourceUserId }) ;
 		if (!userDataSrc) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
@@ -40,12 +42,16 @@ export default class SocialLib {
 	}
 
 	static async removeContactRequest(sourceUserName, destUserId) {
+		const UserData = getUserDataModel() ;
+
 		const filter = { _id: destUserId } ;
 		const update = { $pull: { "contactRequests": { sourceUserName }}} ;
 		await UserData.updateOne(filter, update) ; // Fail silently if it doesn't exist
 	}
 
 	static async addContact(sourceUserName, destUserId) {
+		const UserData = getUserDataModel() ;
+
 		// Check contact-to-be-added exists (source) and get id and image url
 		const userDataSrc = await UserData.findOne({ "userProfile.userName": sourceUserName }) ;
 		if (!userDataSrc) throw "USER_NOT_FOUND" ;
@@ -85,6 +91,8 @@ export default class SocialLib {
 	}
 
 	static async removeContact(contactUserName, currentUserId) {
+		const UserData = getUserDataModel() ;
+
 		// Get username for current user
 		const userDataCurrent = await UserData.findOne({ _id: currentUserId }) ;
 		if (!userDataCurrent) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
@@ -106,12 +114,17 @@ export default class SocialLib {
 	}
 
 	static async retrieveContacts(userId) {
+		const UserData = getUserDataModel() ;
+
 		const userData = await UserData.findOne({ _id: userId }) ;
 		if (!userData) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
 		return userData.contacts ;
 	}
 
 	static async createMessage(sourceUserId, destUserName, messageSubject, messageContent) {
+		const UserData = getUserDataModel() ;
+		const Message = getMessageModel() ;
+
 		// Source ID -> UserName, Image URL
 		const userDataSrc = await UserData.findOne({ _id: sourceUserId }) ;
 		if (!userDataSrc) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
@@ -143,12 +156,17 @@ export default class SocialLib {
 	}
 
 	static async retrieveMessageMetas(userId) {
+		const UserData = getUserDataModel() ;
+
 		const userData = await UserData.findOne({ _id: userId }) ;
 		if (!userData) throw "SELF_NOT_FOUND" ; // (shouldn't happen except for race condition)
 		return userData.messageMetas ;
 	}
 
 	static async removeMessage(currentUserId, messageId) {
+		const UserData = getUserDataModel() ;
+		const Message = getMessageModel() ;
+
 		// Remove message metadata
 		{
 			const filter = { _id: currentUserId } ; // (match user)
@@ -164,6 +182,8 @@ export default class SocialLib {
 	}
 
 	static async retrieveMessageContent(currentUserId, messageId) {
+		const Message = getMessageModel() ;
+
 		const filter = { destUserId: currentUserId, _id: messageId } ; // (match user and message id)
 		const message = await Message.findOne(filter) ;
 		if (!message) throw "MESSAGE_NOT_FOUND" ;
@@ -171,6 +191,8 @@ export default class SocialLib {
 	}
 
 	static async findUsersByLocation(location) {
+		const UserData = getUserDataModel() ;
+
 		const filter = { "userProfile.location": location, "userProfile.locationPrivacy": {$ne: 'pri'} } ;
 		const userDatas = await UserData.find(filter) ;
 		return userDatas.map(userData => userData.userProfile.userName) ;

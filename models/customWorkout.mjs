@@ -10,4 +10,5 @@ const customWorkoutSchema = Schema({
     username: String,
 })
 
-export default model('CustomWorkout', customWorkoutSchema);
+export { customWorkoutSchema };
+export default () => model(global.userCollectionsPrefix + 'CustomWorkout', customWorkoutSchema) ;

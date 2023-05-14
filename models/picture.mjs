@@ -6,4 +6,5 @@ const pictureSchema = Schema({
     imageUrl: String,
 })
 
-export default model('Picture', pictureSchema);
+export { pictureSchema };
+export default () => model(global.userCollectionsPrefix + 'Picture', pictureSchema) ;

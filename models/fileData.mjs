@@ -12,4 +12,5 @@ const fileDataSchema = Schema({
 
 fileDataSchema.index({ foreignId: 1, fileName: 1, category: 1}, { unique: true });
 
-export default model('FileData', fileDataSchema);
+export { fileDataSchema };
+export default () => model(global.userCollectionsPrefix + 'FileData', fileDataSchema) ;

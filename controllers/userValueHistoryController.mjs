@@ -1,8 +1,10 @@
-import UserValueHistory from "../models/userValueHistory.mjs";
+import getUserValueHistory from "../models/userValueHistory.mjs";
 import * as v from "../utils/validation.mjs";
 
 // Handle user-profile updates
 export async function getFirstValueForField(req, res) {
+	const UserValueHistory = getUserValueHistory() ;
+
 	// Validation
 	const fieldName = req.params.fieldName ;
 	if (!v.isStringOneOf(fieldName, ['weight', 'height'])) return res.status(400).send({message: "Bad request"}) ;

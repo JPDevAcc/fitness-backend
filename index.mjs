@@ -11,6 +11,8 @@ import session from "express-session";
 import MemoryStoreClass from "memorystore";
 const MemoryStore = MemoryStoreClass(session);
 import expressMongoSanitize from "express-mongo-sanitize";
+import databaseIsolation from "./databaseIsolation.mjs";
+import cookieParser from 'cookie-parser';
 
 // Init dotenv
 config();
@@ -39,6 +41,12 @@ app.use(checkCustomHeader) ;
 // Other middleware
 app.use(express.json({ limit: "1500kb" }));
 app.use(express.urlencoded({ extended: true, limit: "1500kb" }));
+app.use(cookieParser()) ;
+
+// Database collection isolation
+if (process.env.ENABLE_DB_ISOLATION === 'true') app.use(databaseIsolation) ;
+else global.userCollectionsPrefix = '' ;
+console.log("Database collection isolation is:", (process.env.ENABLE_DB_ISOLATION === 'true') ? 'ENABLED' : 'DISABLED') ;
 
 // (See https://github.com/expressjs/session/issues/837)
 function fakeSecure(req, res, next) {
@@ -65,6 +73,7 @@ app.use(session({
 	store: new MemoryStore({
 		checkPeriod: 1 * 60 * 60 * 1000 // prune expired entries every hour
 	}),
+	// TODO: Move this to .env (although it's PROBABLY not security critical, as long as the values are still unpredictable)
 	secret: 'ah738dfusk626fuiakgheghbslgh56274',
 	resave: false,
 	saveUninitialized: true

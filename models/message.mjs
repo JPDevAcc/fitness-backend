@@ -5,4 +5,5 @@ const messageSchema = Schema({
 	messageContent: String,
 })
 
-export default model('Message', messageSchema) ;
+export { messageSchema };
+export default () => model(global.userCollectionsPrefix + 'Message', messageSchema) ;

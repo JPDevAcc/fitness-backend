@@ -1,7 +1,7 @@
 // Auth controllers and middleware
 
 import { config } from "dotenv";
-import User from './models/user.mjs';
+import getUserModel from './models/user.mjs';
 import crypto from 'crypto';
 import bcrypt from "bcryptjs";
 import ProfileLib from "./libs/profileLib.mjs";
@@ -12,6 +12,8 @@ import * as v from "./utils/validation.mjs";
 config();
 
 export const authenticate = async (req, res) => {
+	const User = getUserModel() ;
+
 	// Validation
 	if (!v.isEmail(req.body.email)) return res.status(400).send({message: "Bad request"}) ;
 	if (!v.isString(req.body.password, 8)) return res.status(400).send({message: "Bad request"}) ;
@@ -48,11 +50,13 @@ export const authenticate = async (req, res) => {
 }
 
 export const authorize = async (req, res, next) => {
+	const User = getUserModel() ;
+
 	// Validation
 	if (!v.isString(req.headers['token'])) return res.status(400).send({message: "Bad request"}) ;
 
-	console.log("Session-based auth (userId): ", req.session.userId);
-	console.log("Token-based auth: ", req.headers['token']);
+	// console.log("Session-based auth (userId): ", req.session.userId);
+	// console.log("Token-based auth: ", req.headers['token']);
 
 	const token = req.headers['token'];
 

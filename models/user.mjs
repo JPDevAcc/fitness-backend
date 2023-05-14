@@ -6,4 +6,5 @@ const userSchema = Schema({
 	token: String // (not marked unique but negligible chance of collision)
 })
 
-export default model('User', userSchema);
+export { userSchema };
+export default () => model(global.userCollectionsPrefix + 'User', userSchema) ;

@@ -1,9 +1,9 @@
 import { nonCryptoRandHexString } from "../utils/utils.mjs";
 import { MONGO_ERR_DUPLICATE_KEY } from "../utils/errcodes.mjs";
-import User from "../models/user.mjs";
-import UserData from "../models/userData.mjs";
-import Post from "../models/post.mjs";
-import Comment from "../models/comment.mjs";
+import getUserModel from "../models/user.mjs";
+import getUserDataModel from "../models/userData.mjs";
+import getPostModel from "../models/post.mjs";
+import getCommentModel from "../models/comment.mjs";
 import bcrypt from "bcryptjs";
 import { randomBytes } from 'crypto';
 import UserValueHistoryLib from "./userValueHistoryLib.mjs";
@@ -11,6 +11,8 @@ import UserValueHistoryLib from "./userValueHistoryLib.mjs";
 export default class ProfileLib {
 	// Retrieve profile-data according to privacy settings
 	static async retrieveProfile(currentUserId, userName) {
+		const UserData = getUserDataModel() ;
+
 		const userData = await UserData.findOne({ "userProfile.userName": userName });
 		if (!userData) throw "USER_NOT_FOUND" ;
 		const userProfile = userData.userProfile.toObject() ;
@@ -54,6 +56,8 @@ export default class ProfileLib {
 
 	// Set (on first login) a (random) unique username and unique image url (denoting no image)
 	static async initialProfileSetup(userId) {
+		const UserData = getUserDataModel() ;
+
 		const imageUrl = 'none_' + randomBytes(32).toString('hex') ;
 		while (true) {
 			// Generate random username | 8 * 4 = 32 bits = 16 bits collision resistance
@@ -80,6 +84,8 @@ export default class ProfileLib {
 	}
 
 	static async updateField(userId, fieldName, value) {
+		const UserData = getUserDataModel() ;
+
 		const filter = { _id: userId } ;
 		const update = { $set: { [`userProfile.${fieldName}`]: value } } ;
 		await UserData.updateOne(filter, update); // (user profile should already exist at this point)
@@ -91,6 +97,10 @@ export default class ProfileLib {
 	}
 
 	static async updateProfileImageUrl(userId, newImageUrl) {
+		const UserData = getUserDataModel() ;
+		const Post = getPostModel() ;
+		const Comment = getCommentModel() ;
+
 		// Generate a unique url denoting no-image if removing the image (so we can still do find-and-replace on them in the future) 
 		if (newImageUrl === "") newImageUrl = 'none_' + randomBytes(32).toString('hex') ;
 
@@ -144,6 +154,11 @@ export default class ProfileLib {
 	}
 
 	static async updateUserName(userId, currentPwd, newUserName) {
+		const User = getUserModel() ;
+		const UserData = getUserDataModel() ;
+		const Post = getPostModel() ;
+		const Comment = getCommentModel() ;
+
 		// Get user
 		const user = await User.findOne({ _id: userId }) ;
 		if (!user) throw "SELF_NOT_FOUND"; // (shouldn't happen except for possible race condition)
