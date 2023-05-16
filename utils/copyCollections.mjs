@@ -29,9 +29,10 @@ const collectionsSchema = [
 
 export default async function copyCollections() {
 	const collectionCopyPrefix = global.userCollectionsPrefix ;
-	const alreadyCopied = !!(await CollectionCopyPrefixModel.findOne({prefix: collectionCopyPrefix})) ;
+	const collectionCopyPrefixEntry = await CollectionCopyPrefixModel.findOne({prefix: collectionCopyPrefix}) ;
+	const copyRequired = !collectionCopyPrefixEntry ;
 
-	if (!alreadyCopied) {
+	if (copyRequired) {
 		for (const [schemaName, schema] of collectionsSchema) {
 			const schemaCopyName = collectionCopyPrefix + schemaName ;
 			console.log("Creating collection copy", schemaCopyName) ;
@@ -52,6 +53,10 @@ export default async function copyCollections() {
 		await CollectionCopyPrefixModel.create({prefix: global.userCollectionsPrefix}) ;
 	}
 	else {
+		// Reset expiry (update timestamp)
+		collectionCopyPrefixEntry.timestamp = new Date().getTime() ;
+		await collectionCopyPrefixEntry.save() ;
+
 		if (Math.random() > 0.1) return ; // (no need to do this check every time)
 		console.log("(checking for expired collection copies)") ;
 
@@ -68,7 +73,7 @@ export default async function copyCollections() {
 				console.log("Removing old collection", schemaCopyName) ;
 				const modelCopy = model(schemaCopyName, schema) ;
 				try {
-					await modelCopy.collection.drop() ;
+					await modelCopy.collection.drop() ; // TODO: Check why sometimes this seems to empty rather than drop the collection
 				}
 				catch(err) {
 					// (ignore errors when removing collections - they might just have not been copied due to being empty)
