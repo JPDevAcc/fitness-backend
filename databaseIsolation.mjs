@@ -5,9 +5,15 @@ import crypto from "crypto" ;
 // Note: We use this rather than IP address as it's a bit more reliable
 // TODO: Add some kind of IP-based throttling as well?
 export default async function databaseIsolation(req, res, next) {
-	if (req.cookies.outerSession) global.userCollectionsPrefix = req.cookies.outerSession + '_' ;
+	let isValidOuterSessionId = false ; 
+	if (req.cookies.outerSession) {
+		if (/^[0-9a-f]{16}$/.test(req.cookies.outerSession)) isValidOuterSessionId = true ;
+		else console.error("Invalid outer session id") ;
+	}
+	if (isValidOuterSessionId) global.userCollectionsPrefix = req.cookies.outerSession + '_' ;
 	else {
-		const outerSessionId = crypto.randomBytes(16).toString('base64') ;
+		// (64-bits is sufficient for this purpose - we don't want to make the collection names too long)
+		const outerSessionId = crypto.randomBytes(8).toString('hex').padStart(8, '0') ;
 		 const options = {
       httpOnly: true, // No JS access
 			secure: true,
