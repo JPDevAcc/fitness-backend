@@ -12,27 +12,17 @@ function responseStatusCheck(res) {
 }
 
 export async function getRecipe(req, res) {
-    const key = process.env.FOOD_API_KEY;
-
-    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
+		const headers = JSON.parse(process.env.FOOD_API_HEADERS) ;
+    const url = process.env.FOOD_API_BASEURL + "/recipes/complexSearch" ;
     try {
 
         const params = new URLSearchParams({
             query: req.params.query
         })
 
-        const request = await axios.get(`${url}?${params.toString()}`,
-            {
-                headers: {
-                    'X-RapidAPI-Key': key,
-                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-                }
-            }
-        )
+        const request = await axios.get(`${url}?${params.toString()}`, { headers }) ;
         const response = await responseStatusCheck(request);
-        const data = response.data;
-
-        return res.send(data);
+        return res.send(response.data);
     }
 
     catch (err) {
@@ -77,25 +67,12 @@ export async function addRecipe(req, res) {
 }
 
 export async function getFullRecipe(req, res) {
-    const key = process.env.FOOD_API_KEY;
-
-    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + req.params.id + "/information"
+		const headers = JSON.parse(process.env.FOOD_API_HEADERS) ;
+    const url = process.env.FOOD_API_BASEURL + "/recipes/" + req.params.id + "/information"
     try {
-
-        const request = await axios.get(`${url}`,
-
-            {
-                headers: {
-
-                    'X-RapidAPI-Key': key,
-                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-                }
-            }
-        )
+        const request = await axios.get(`${url}`, { headers }) ;
         const response = await responseStatusCheck(request);
-        const data = response.data;
-
-        return res.send(data);
+        return res.send( response.data);
     }
 
     catch (err) {
@@ -104,9 +81,8 @@ export async function getFullRecipe(req, res) {
 }
 
 export async function getIngredientInfo(req, res) {
-    const key = process.env.FOOD_API_KEY;
-
-    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/" + req.params.id + "/information"
+		const headers = JSON.parse(process.env.FOOD_API_HEADERS) ;
+    const url = process.env.FOOD_API_BASEURL + "/food/ingredients/" + req.params.id + "/information"
     try {
 
         const request = await axios.get(`${url}`,
@@ -116,11 +92,7 @@ export async function getIngredientInfo(req, res) {
                     amount: req.params.amount,
                     unit: req.params.unit
                 },
-                headers: {
-
-                    'X-RapidAPI-Key': key,
-                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-                }
+                headers
             }
         )
         const response = await responseStatusCheck(request);
@@ -135,20 +107,15 @@ export async function getIngredientInfo(req, res) {
 }
 
 export async function getIngredientID(req, res) {
-    const key = process.env.FOOD_API_KEY;
-
-    const url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/ingredients/search"
+		const headers = JSON.parse(process.env.FOOD_API_HEADERS) ;
+    const url = process.env.FOOD_API_BASEURL + "/food/ingredients/search"
     try {
 
         const request = await axios.get(`${url}`,
 
             {
                 params: { query: req.params.query },
-                headers: {
-
-                    'X-RapidAPI-Key': key,
-                    'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
-                }
+                headers
             }
         )
         const response = await responseStatusCheck(request);
@@ -161,8 +128,6 @@ export async function getIngredientID(req, res) {
         return res.status(500).send({ message: "Something went wrong!" })
     }
 }
-
-
 
 export async function addPicture(req, res) {
 	const Picture = getPictureModel() ;
